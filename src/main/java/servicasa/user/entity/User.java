@@ -5,6 +5,7 @@ import servicasa.user.enums.Role;
 
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @AllArgsConstructor
