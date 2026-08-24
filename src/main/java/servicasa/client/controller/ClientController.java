@@ -1,4 +1,4 @@
-package servicasa.controller;
+package servicasa.client.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;

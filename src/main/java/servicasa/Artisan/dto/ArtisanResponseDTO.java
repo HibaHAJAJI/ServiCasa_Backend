@@ -1,4 +1,4 @@
-package servicasa.dto;
+package servicasa.Artisan.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,5 +8,5 @@ import servicasa.user.dto.UserResponse;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientDto extends UserResponse {
+public class ArtisanResponseDTO extends UserResponse {
 }

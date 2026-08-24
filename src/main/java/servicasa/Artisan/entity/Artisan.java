@@ -1,4 +1,4 @@
-package servicasa.entity;
+package servicasa.Artisan.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -9,10 +9,10 @@ import lombok.Setter;
 import servicasa.user.entity.User;
 
 @Entity
-@Table(name = "clients")
+@Table(name = "artisans")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Client extends User {
+public class Artisan extends User {
 }
