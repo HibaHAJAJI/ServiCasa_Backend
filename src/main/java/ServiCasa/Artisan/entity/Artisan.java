@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ServiCasa.user.entity.User;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
@@ -19,6 +21,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name = "id")
 public class Artisan extends User {
+
+    private String specialite;
+
+    private Integer anneesExperience;
+
+    private BigDecimal tarifHoraire;
+
+    private String description;
+
+    private String zoneIntervention;
+
     private LocalDate dateNaissance;
 
 }
