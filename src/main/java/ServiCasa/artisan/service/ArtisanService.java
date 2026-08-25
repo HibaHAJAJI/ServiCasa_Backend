@@ -1,8 +1,8 @@
-package ServiCasa.Artisan.service;
+package ServiCasa.artisan.service;
 
 
-import ServiCasa.Artisan.dto.ArtisanRequestDTO;
-import ServiCasa.Artisan.dto.ArtisanResponseDTO;
+import ServiCasa.artisan.dto.ArtisanRequestDTO;
+import ServiCasa.artisan.dto.ArtisanResponseDTO;
 
 import java.util.List;
 

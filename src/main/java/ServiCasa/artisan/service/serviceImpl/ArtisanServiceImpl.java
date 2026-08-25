@@ -1,12 +1,12 @@
-package ServiCasa.Artisan.service.serviceImpl;
+package ServiCasa.artisan.service.serviceImpl;
 
 
-import ServiCasa.Artisan.dto.ArtisanRequestDTO;
-import ServiCasa.Artisan.dto.ArtisanResponseDTO;
-import ServiCasa.Artisan.entity.Artisan;
-import ServiCasa.Artisan.mapper.ArtisanMapper;
-import ServiCasa.Artisan.repository.ArtisanRepository;
-import ServiCasa.Artisan.service.ArtisanService;
+import ServiCasa.artisan.dto.ArtisanRequestDTO;
+import ServiCasa.artisan.dto.ArtisanResponseDTO;
+import ServiCasa.artisan.entity.Artisan;
+import ServiCasa.artisan.mapper.ArtisanMapper;
+import ServiCasa.artisan.repository.ArtisanRepository;
+import ServiCasa.artisan.service.ArtisanService;
 import ServiCasa.enums.Role;
 import ServiCasa.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

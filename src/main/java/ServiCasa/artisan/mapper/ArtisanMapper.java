@@ -1,9 +1,9 @@
-package ServiCasa.Artisan.mapper;
+package ServiCasa.artisan.mapper;
 
-import ServiCasa.Artisan.dto.ArtisanRequestDTO;
+import ServiCasa.artisan.dto.ArtisanRequestDTO;
 import org.mapstruct.Mapper;
-import ServiCasa.Artisan.dto.ArtisanResponseDTO;
-import ServiCasa.Artisan.entity.Artisan;
+import ServiCasa.artisan.dto.ArtisanResponseDTO;
+import ServiCasa.artisan.entity.Artisan;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 

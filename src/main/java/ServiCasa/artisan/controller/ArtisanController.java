@@ -1,8 +1,8 @@
-package ServiCasa.Artisan.controller;
+package ServiCasa.artisan.controller;
 
-import ServiCasa.Artisan.dto.ArtisanRequestDTO;
-import ServiCasa.Artisan.dto.ArtisanResponseDTO;
-import ServiCasa.Artisan.service.ArtisanService;
+import ServiCasa.artisan.dto.ArtisanRequestDTO;
+import ServiCasa.artisan.dto.ArtisanResponseDTO;
+import ServiCasa.artisan.service.ArtisanService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,21 +14,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArtisanController {
 
-
     private final ArtisanService artisanService;
 
     @PostMapping
-    public ArtisanResponseDTO createClient(@RequestBody ArtisanRequestDTO dto){
+    public ArtisanResponseDTO createArtisan(@RequestBody ArtisanRequestDTO dto){
         return artisanService.addArtisan(dto);
     }
 
     @PutMapping("/{id}")
-    public ArtisanResponseDTO updateClient(@RequestBody ArtisanRequestDTO dto,@PathVariable Long id){
+    public ArtisanResponseDTO updateArtisan(@RequestBody ArtisanRequestDTO dto,@PathVariable Long id){
         return artisanService.updateArtisan(id,dto);
     }
 
     @GetMapping
-    public List<ArtisanResponseDTO> getAllClients(){
+    public List<ArtisanResponseDTO> getAllArtisans(){
         return artisanService.findAllArtisans();
     }
 
@@ -39,7 +38,7 @@ public class ArtisanController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteClientById(@PathVariable Long id){
+    public void deleteArtisanById(@PathVariable Long id){
         artisanService.deleteArtisan(id);
     }
 }

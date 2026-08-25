@@ -1,4 +1,4 @@
-package ServiCasa.Artisan.dto;
+package ServiCasa.artisan.dto;
 
 import lombok.*;
 import ServiCasa.user.dto.UserRegisterRequest;

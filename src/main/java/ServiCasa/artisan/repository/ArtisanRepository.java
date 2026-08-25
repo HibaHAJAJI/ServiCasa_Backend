@@ -1,7 +1,7 @@
-package ServiCasa.Artisan.repository;
+package ServiCasa.artisan.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ServiCasa.Artisan.entity.Artisan;
+import ServiCasa.artisan.entity.Artisan;
 
 
 public interface ArtisanRepository extends JpaRepository<Artisan,Long> {

@@ -1,17 +1,26 @@
-package ServiCasa.Artisan.dto;
+package ServiCasa.artisan.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ServiCasa.user.dto.UserResponse;
+import lombok.Setter;
+import ServiCasa.user.entity.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Data
+
+@Entity
+@Table(name = "artisans")
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArtisanResponseDTO extends UserResponse {
+@PrimaryKeyJoinColumn(name = "id")
+public class Artisan extends User {
 
     private String specialite;
 
@@ -24,4 +33,5 @@ public class ArtisanResponseDTO extends UserResponse {
     private String zoneIntervention;
 
     private LocalDate dateNaissance;
+
 }
