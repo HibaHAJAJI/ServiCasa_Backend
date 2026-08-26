@@ -1,11 +1,10 @@
 package ServiCasa.categorie.dto;
 
-import ServiCasa.user.dto.UserRegisterRequest;
 import lombok.Data;
 
 
 @Data
-public class CategorieRequestDTO extends UserRegisterRequest {
+public class CategorieRequestDTO  {
 
     private String nom;
 }

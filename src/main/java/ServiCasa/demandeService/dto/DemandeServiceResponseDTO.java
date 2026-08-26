@@ -1,6 +1,5 @@
 package ServiCasa.demandeService.dto;
 
-import ServiCasa.user.dto.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DemandeServiceResponseDTO extends UserResponse {
+public class DemandeServiceResponseDTO {
 
 
     private Long id;
