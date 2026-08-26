@@ -30,8 +30,6 @@ public class Artisan extends User {
 
     private String zoneIntervention;
 
-    private LocalDate dateNaissance;
-
     @OneToMany(mappedBy = "artisan",cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Reservation> reservations;

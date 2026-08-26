@@ -23,7 +23,5 @@ public class ArtisanRequestDTO extends UserRegisterRequest {
 
     private String zoneIntervention;
 
-    private LocalDate dateNaissance;
-
 
 }

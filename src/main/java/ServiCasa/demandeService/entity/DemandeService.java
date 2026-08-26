@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "demande_service")
+@Table(name = "demande_services")
 @Getter
 @Setter
 @AllArgsConstructor

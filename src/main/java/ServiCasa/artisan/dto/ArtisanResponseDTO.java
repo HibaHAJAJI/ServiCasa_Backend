@@ -24,6 +24,4 @@ public class ArtisanResponseDTO extends UserResponse {
 
     private String zoneIntervention;
 
-    private LocalDate dateNaissance;
-
 }
