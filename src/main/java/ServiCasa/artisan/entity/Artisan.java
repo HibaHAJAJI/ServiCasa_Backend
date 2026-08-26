@@ -1,16 +1,14 @@
 package ServiCasa.artisan.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import ServiCasa.disponibilite.entity.Disponibilite;
+import ServiCasa.reservation.entity.Reservation;
+import jakarta.persistence.*;
+import lombok.*;
 import ServiCasa.user.entity.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -33,5 +31,13 @@ public class Artisan extends User {
     private String zoneIntervention;
 
     private LocalDate dateNaissance;
+
+    @OneToMany(mappedBy = "artisan",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Reservation> reservations;
+
+    @OneToMany(mappedBy = "artisan", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Disponibilite> disponibilites;
 
 }

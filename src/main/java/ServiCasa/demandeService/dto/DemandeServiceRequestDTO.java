@@ -10,4 +10,7 @@ public class DemandeServiceRequestDTO  {
     private String nom;
 
     private String description;
+
+    private Long categorieId;
+
 }

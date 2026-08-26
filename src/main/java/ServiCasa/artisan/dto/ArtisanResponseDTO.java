@@ -1,5 +1,6 @@
 package ServiCasa.artisan.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,5 @@ public class ArtisanResponseDTO extends UserResponse {
     private String zoneIntervention;
 
     private LocalDate dateNaissance;
+
 }

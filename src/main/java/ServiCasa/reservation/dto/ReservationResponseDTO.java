@@ -1,10 +1,12 @@
 package ServiCasa.reservation.dto;
 
+
 import ServiCasa.enums.StatutReservation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
@@ -24,4 +26,14 @@ public class ReservationResponseDTO {
     private String adressIntervention;
 
     private String descriptionProbleme;
+
+    private BigDecimal prixTotal;
+
+    private Long clientId;
+
+    private Long artisanId;
+
+    private Long demandeServiceId;
+
+    private Long paiementId;
 }

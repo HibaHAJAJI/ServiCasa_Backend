@@ -1,13 +1,14 @@
 package ServiCasa.client.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import ServiCasa.reservation.entity.Reservation;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ServiCasa.user.entity.User;
-import java.time.LocalDate;
+import lombok.ToString;
+
+import java.util.List;
 
 @Entity
 @Table(name = "clients")
@@ -17,6 +18,10 @@ import java.time.LocalDate;
 @PrimaryKeyJoinColumn(name = "id")
 public class Client extends User {
 
-    private LocalDate dateNaissance;
+    private String adresse;
+
+    @OneToMany(mappedBy = "client",cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Reservation> reservations;
 
 }

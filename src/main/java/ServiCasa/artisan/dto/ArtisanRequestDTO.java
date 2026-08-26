@@ -1,10 +1,13 @@
 package ServiCasa.artisan.dto;
 
+import ServiCasa.disponibilite.entity.Disponibilite;
+import ServiCasa.reservation.entity.Reservation;
 import lombok.*;
 import ServiCasa.user.dto.UserRegisterRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Data
@@ -21,4 +24,6 @@ public class ArtisanRequestDTO extends UserRegisterRequest {
     private String zoneIntervention;
 
     private LocalDate dateNaissance;
+
+
 }

@@ -7,6 +7,7 @@ public enum StatutReservation {
     ACCEPTEE,
     REFUSEE,
     EN_COURS,
-    TERMINEE
+    TERMINEE,
+    ANNULEE
 
 }

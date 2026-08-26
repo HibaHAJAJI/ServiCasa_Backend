@@ -1,11 +1,13 @@
 package ServiCasa.categorie.entity;
 
+import ServiCasa.demandeService.entity.DemandeService;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 
 
 @Entity
@@ -21,6 +23,9 @@ public class Categorie {
     private Long id;
 
     private String nom;
+
+    @OneToMany(mappedBy = "categorie", cascade = CascadeType.ALL)
+    private List<DemandeService> demandeServices;
 
 
 }

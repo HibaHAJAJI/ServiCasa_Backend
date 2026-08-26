@@ -5,5 +5,6 @@ package ServiCasa.enums;
 public enum StatutPaiement {
     EN_ATTENTE,
     PAYE,
-    REMBOURSE
+    REMBOURSE,
+    ECHOUE
 }
