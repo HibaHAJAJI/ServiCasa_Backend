@@ -16,8 +16,6 @@ public class PaiementRequestDTO {
             message = "Le montant doit être supérieur à 0")
     private BigDecimal montant;
 
-    @NotNull(message = "Le statut du paiement est obligatoire")
-    private StatutPaiement statutPaiement;
 
     @NotNull(message = "La réservation est obligatoire")
     private Long reservationId;

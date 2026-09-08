@@ -13,24 +13,16 @@ import java.time.LocalDateTime;
 @Data
 public class ReservationRequestDTO {
 
-    @NotNull(message = "La date de réservation est obligatoire")
-    private LocalDateTime dateReservation;
 
     @NotNull(message = "La date d'intervention est obligatoire")
     private LocalDateTime dateIntervention;
 
-    private StatutReservation statutReservation;
 
     @NotBlank(message = "L'adresse d'intervention est obligatoire")
     private String adressIntervention;
 
     @NotBlank(message = "La description du problème est obligatoire")
     private String descriptionProbleme;
-
-    @NotNull(message = "Le prix total est obligatoire")
-    @DecimalMin(value = "0.0", inclusive = false,
-            message = "Le prix total doit être supérieur à 0")
-    private BigDecimal prixTotal;
 
     @NotNull(message = "Le client est obligatoire")
     private Long clientId;
