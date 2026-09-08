@@ -4,7 +4,6 @@ import ServiCasa.auth.dto.AuthRequestDTO;
 import ServiCasa.auth.dto.AuthResponseDTO;
 import ServiCasa.auth.service.AuthService;
 import ServiCasa.dto.request.UserRegisterRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
