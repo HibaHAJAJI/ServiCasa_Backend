@@ -5,6 +5,7 @@ import ServiCasa.dto.request.DisponibiliteRequestDTO;
 import ServiCasa.dto.response.ClientResponseDTO;
 import ServiCasa.dto.response.DisponibiliteResponseDTO;
 import ServiCasa.service.DisponibiliteService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +21,12 @@ public class DisponibiliteController {
     private final DisponibiliteService disponibiliteService;
 
     @PostMapping
-    public DisponibiliteResponseDTO createDisponibilite(@RequestBody DisponibiliteRequestDTO dto){
+    public DisponibiliteResponseDTO createDisponibilite(@Valid @RequestBody DisponibiliteRequestDTO dto){
         return disponibiliteService.addDisponibilite(dto);
     }
 
     @PutMapping("/{id}")
-    public DisponibiliteResponseDTO updateDisponibilite(@RequestBody DisponibiliteRequestDTO dto, @PathVariable Long id){
+    public DisponibiliteResponseDTO updateDisponibilite(@Valid @RequestBody DisponibiliteRequestDTO dto, @PathVariable Long id){
         return disponibiliteService.updateDisponibilite(dto,id);
     }
 

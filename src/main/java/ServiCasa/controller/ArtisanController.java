@@ -4,6 +4,7 @@ import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.response.ArtisanResponseDTO;
 import ServiCasa.service.ArtisanService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +18,12 @@ public class ArtisanController {
     private final ArtisanService artisanService;
 
     @PostMapping
-    public ArtisanResponseDTO createArtisan(@RequestBody ArtisanRequestDTO dto){
+    public ArtisanResponseDTO createArtisan(@Valid@RequestBody ArtisanRequestDTO dto){
         return artisanService.addArtisan(dto);
     }
 
     @PutMapping("/{id}")
-    public ArtisanResponseDTO updateArtisan(@RequestBody ArtisanRequestDTO dto,@PathVariable Long id){
+    public ArtisanResponseDTO updateArtisan(@Valid @RequestBody ArtisanRequestDTO dto, @PathVariable Long id){
         return artisanService.updateArtisan(id,dto);
     }
 

@@ -3,6 +3,7 @@ package ServiCasa.controller;
 import ServiCasa.dto.request.DemandeServiceRequestDTO;
 import ServiCasa.dto.response.DemandeServiceResponseDTO;
 import ServiCasa.service.DemandeServiceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +18,12 @@ public class DemandeServiceController {
     private final DemandeServiceService demandeServiceService;
 
     @PostMapping
-    public DemandeServiceResponseDTO createDemandeService(@RequestBody DemandeServiceRequestDTO dto){
+    public DemandeServiceResponseDTO createDemandeService(@Valid  @RequestBody DemandeServiceRequestDTO dto){
         return demandeServiceService.addDemandeService(dto);
     }
 
     @PutMapping("/{id}")
-    public DemandeServiceResponseDTO updateDemandeService(@RequestBody DemandeServiceRequestDTO dto, @PathVariable Long id){
+    public DemandeServiceResponseDTO updateDemandeService(@Valid @RequestBody DemandeServiceRequestDTO dto, @PathVariable Long id){
         return demandeServiceService.updateDemandeService(id,dto);
     }
 

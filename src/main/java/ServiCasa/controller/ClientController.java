@@ -3,6 +3,7 @@ package ServiCasa.controller;
 import ServiCasa.dto.request.ClientRequestDTO;
 import ServiCasa.dto.response.ClientResponseDTO;
 import ServiCasa.service.ClientService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +16,12 @@ public class ClientController {
     private final ClientService clientService;
 
     @PostMapping
-    public ClientResponseDTO createClient(@RequestBody ClientRequestDTO dto){
+    public ClientResponseDTO createClient(@Valid @RequestBody ClientRequestDTO dto){
         return clientService.addClient(dto);
     }
 
     @PutMapping("/{id}")
-    public ClientResponseDTO updateClient(@RequestBody ClientRequestDTO dto,@PathVariable Long id){
+    public ClientResponseDTO updateClient(@Valid @RequestBody ClientRequestDTO dto,@PathVariable Long id){
         return clientService.updateClient(dto,id);
     }
 
