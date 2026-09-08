@@ -1,5 +1,6 @@
 package ServiCasa.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +14,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenthicationFilter;
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(
@@ -23,11 +27,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/auth/register")
+                        .requestMatchers("/api/auth/login", "/api/auth/register","/v3/api-docs/**",
+                                "/swagger-ui/**", "/swagger-ui.html")
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(
-                        jwtAuthenticationFilter,
+                        jwtAuthenthicationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
                 .build();
