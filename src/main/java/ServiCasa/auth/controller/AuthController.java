@@ -3,6 +3,7 @@ package ServiCasa.auth.controller;
 import ServiCasa.auth.dto.AuthRequestDTO;
 import ServiCasa.auth.dto.AuthResponseDTO;
 import ServiCasa.auth.service.AuthService;
+import ServiCasa.dto.request.UserRegisterRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,13 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody AuthRequestDTO dto) {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthRequestDTO dto) {
         return ResponseEntity.ok(authService.login(dto));
+    }
+
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponseDTO> register(@RequestBody UserRegisterRequest dto) {
+        return ResponseEntity.ok(authService.register(dto));
     }
 }

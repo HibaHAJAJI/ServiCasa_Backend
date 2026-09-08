@@ -3,7 +3,9 @@ package ServiCasa.auth.service.impl;
 import ServiCasa.auth.dto.AuthRequestDTO;
 import ServiCasa.auth.dto.AuthResponseDTO;
 import ServiCasa.auth.service.AuthService;
+import ServiCasa.dto.request.UserRegisterRequest;
 import ServiCasa.entity.User;
+import ServiCasa.mapper.UserMapper;
 import ServiCasa.repository.UserRepository;
 import ServiCasa.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +22,11 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
+    @Override
     public AuthResponseDTO login(AuthRequestDTO dto){
 
         authenticationManager.authenticate(
@@ -37,5 +41,26 @@ public class AuthServiceImpl implements AuthService {
         return new AuthResponseDTO(token);
 
     }
+
+
+    @Override
+    public AuthResponseDTO register(UserRegisterRequest dto){
+
+            if(userRepository.findByEmail(dto.getEmail()).isPresent()){
+                throw new ResponseStatusException(HttpStatus.CONFLICT,("Email déjà exists"));
+            }
+
+            User user =userMapper.toEntity(dto);
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+            User savedUser = userRepository.save(user);
+
+            String token = jwtService.generateToken(savedUser);
+
+            return new AuthResponseDTO(token);
+        }
+
+    }
+
 
 }
