@@ -7,7 +7,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
@@ -16,8 +15,6 @@ public interface ReservationMapper {
      Reservation toEntity(ReservationRequestDTO dto);
 
      ReservationResponseDTO toDto(Reservation reservation);
-
-     List<ReservationResponseDTO> toDtoList(List<Reservation>reservations);
 
      @Mapping(target = "id",ignore = true)
      void updateReservationDto(ReservationRequestDTO dto, @MappingTarget Reservation reservation);

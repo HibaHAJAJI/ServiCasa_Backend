@@ -7,7 +7,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CategorieMapper {
@@ -16,8 +15,6 @@ public interface CategorieMapper {
      Categorie toEntity(CategorieRequestDTO dto);
 
      CategorieResponseDTO toDto(Categorie categorie);
-
-     List<CategorieResponseDTO> toDtoList(List<Categorie>categories);
 
      @Mapping(target = "id",ignore = true)
      void updateCategorieDto(CategorieRequestDTO dto, @MappingTarget Categorie categorie);

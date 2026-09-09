@@ -3,8 +3,9 @@ package ServiCasa.service;
 
 import ServiCasa.dto.request.CategorieRequestDTO;
 import ServiCasa.dto.response.CategorieResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 public interface CategorieService {
 
@@ -12,7 +13,7 @@ public interface CategorieService {
 
     CategorieResponseDTO findCategorieById(Long id);
 
-    List<CategorieResponseDTO> findAllCategories();
+    Page<CategorieResponseDTO> findAllCategories(Pageable pageable);
 
     CategorieResponseDTO updateCategorie(Long id, CategorieRequestDTO dto);
 

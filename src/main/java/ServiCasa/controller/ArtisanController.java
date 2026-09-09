@@ -6,9 +6,10 @@ import ServiCasa.service.ArtisanService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/artisans")
@@ -18,7 +19,7 @@ public class ArtisanController {
     private final ArtisanService artisanService;
 
     @PostMapping
-    public ArtisanResponseDTO createArtisan(@Valid@RequestBody ArtisanRequestDTO dto){
+    public  ArtisanResponseDTO createArtisan(@Valid@RequestBody ArtisanRequestDTO dto){
         return artisanService.addArtisan(dto);
     }
 
@@ -28,8 +29,8 @@ public class ArtisanController {
     }
 
     @GetMapping
-    public List<ArtisanResponseDTO> getAllArtisans(){
-        return artisanService.findAllArtisans();
+    public Page<ArtisanResponseDTO> getAllArtisans(Pageable pageable){
+        return artisanService.findAllArtisans(pageable);
     }
 
 

@@ -5,9 +5,10 @@ import ServiCasa.dto.response.ReservationResponseDTO;
 import ServiCasa.service.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 
 @RestController
@@ -29,8 +30,8 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<ReservationResponseDTO> getAllReservations(){
-        return reservationService.findAllReservations();
+    public Page<ReservationResponseDTO> getAllReservations(Pageable pageable){
+        return reservationService.findAllReservations(pageable);
     }
 
     @GetMapping("/{id}")

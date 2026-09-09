@@ -7,7 +7,6 @@ import ServiCasa.entity.Artisan;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ArtisanMapper {
@@ -16,8 +15,6 @@ public interface ArtisanMapper {
      Artisan toEntity(ArtisanRequestDTO dto);
 
      ArtisanResponseDTO toDto(Artisan artisan);
-
-     List<ArtisanResponseDTO> toDtoList(List<Artisan>artisans);
 
      @Mapping(target = "id",ignore = true)
      void updateArtisanDto(ArtisanRequestDTO dto, @MappingTarget Artisan artisan);

@@ -7,7 +7,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface DisponibiliteMapper {
@@ -16,8 +15,6 @@ public interface DisponibiliteMapper {
      Disponibilite toEntity(DisponibiliteRequestDTO dto);
 
      DisponibiliteResponseDTO toDto(Disponibilite disponibilite);
-
-     List<DisponibiliteResponseDTO> toDtoList(List<Disponibilite>disponibilites);
 
      @Mapping(target = "id",ignore = true)
      void updateDisponibiliteDto(DisponibiliteRequestDTO dto, @MappingTarget Disponibilite disponibilite);

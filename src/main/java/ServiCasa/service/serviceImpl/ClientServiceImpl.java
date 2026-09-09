@@ -1,6 +1,8 @@
 package ServiCasa.service.serviceImpl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,7 +15,6 @@ import ServiCasa.service.ClientService;
 import ServiCasa.enums.Role;
 import ServiCasa.repository.UserRepository;
 
-import java.util.List;
 
 
 @Service
@@ -36,8 +37,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<ClientResponseDTO> findAllClients(){
-        return mapper.toDtoList(repository.findAll());
+    public Page<ClientResponseDTO> findAllClients(Pageable pageable){
+        return repository.findAll(pageable).map(mapper::toDto);
     }
 
     @Override

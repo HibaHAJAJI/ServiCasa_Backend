@@ -8,6 +8,8 @@ import ServiCasa.mapper.DemandeServiceMapper;
 import ServiCasa.repository.DemandeServiceRepository;
 import ServiCasa.service.DemandeServiceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -36,9 +38,9 @@ public class DemandeServiceImpl implements DemandeServiceService {
    }
 
 
-    @Override
-   public List<DemandeServiceResponseDTO> findAllDemandeServices(){
-        return mapper.toDtoList(repository.findAll());
+   @Override
+   public Page<DemandeServiceResponseDTO> findAllDemandeServices(Pageable pageable){
+        return repository.findAll(pageable).map(mapper::toDto);
   }
 
   @Override

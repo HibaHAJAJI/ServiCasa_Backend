@@ -5,9 +5,10 @@ import ServiCasa.dto.response.DemandeServiceResponseDTO;
 import ServiCasa.service.DemandeServiceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/demandeservices")
@@ -28,8 +29,8 @@ public class DemandeServiceController {
     }
 
     @GetMapping
-    public List<DemandeServiceResponseDTO> getAllDemandeServices(){
-        return demandeServiceService.findAllDemandeServices();
+    public Page<DemandeServiceResponseDTO> getAllDemandeServices(Pageable pageable){
+        return demandeServiceService.findAllDemandeServices(pageable);
     }
 
 

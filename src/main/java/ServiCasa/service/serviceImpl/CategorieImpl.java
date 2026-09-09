@@ -8,11 +8,11 @@ import ServiCasa.mapper.CategorieMapper;
 import ServiCasa.repository.CategorieRepository;
 import ServiCasa.service.CategorieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +37,8 @@ public class CategorieImpl implements CategorieService {
 
 
     @Override
-   public List<CategorieResponseDTO> findAllCategories(){
-        return mapper.toDtoList(repository.findAll());
+   public Page<CategorieResponseDTO> findAllCategories(Pageable pageable){
+        return repository.findAll(pageable).map(mapper::toDto);
   }
 
   @Override

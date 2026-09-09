@@ -1,15 +1,14 @@
 package ServiCasa.controller;
 
-import ServiCasa.dto.request.ClientRequestDTO;
 import ServiCasa.dto.request.DisponibiliteRequestDTO;
-import ServiCasa.dto.response.ClientResponseDTO;
 import ServiCasa.dto.response.DisponibiliteResponseDTO;
 import ServiCasa.service.DisponibiliteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 
 @RestController
@@ -31,8 +30,8 @@ public class DisponibiliteController {
     }
 
     @GetMapping
-    public List<DisponibiliteResponseDTO> getAllDisponibilites(){
-        return disponibiliteService.findAllDisponibilites();
+    public Page<DisponibiliteResponseDTO> getAllDisponibilites(Pageable pageable){
+        return disponibiliteService.findAllDisponibilites(pageable);
     }
 
     @GetMapping("/{id}")

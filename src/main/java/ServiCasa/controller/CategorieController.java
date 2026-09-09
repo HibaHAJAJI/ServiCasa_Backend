@@ -5,9 +5,10 @@ import ServiCasa.dto.response.CategorieResponseDTO;
 import ServiCasa.service.CategorieService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -28,8 +29,8 @@ public class CategorieController {
     }
 
     @GetMapping
-    public List<CategorieResponseDTO> getAllCategories(){
-        return categorieService.findAllCategories();
+    public Page<CategorieResponseDTO> getAllCategories(Pageable pageable){
+        return categorieService.findAllCategories(pageable);
     }
 
 

@@ -12,11 +12,12 @@ import ServiCasa.repository.ClientRepository;
 import ServiCasa.repository.ReservationRepository;
 import ServiCasa.service.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 
 
 @Service
@@ -53,8 +54,8 @@ public class ReservationImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationResponseDTO> findAllReservations(){
-        return mapper.toDtoList(repository.findAll());
+    public Page<ReservationResponseDTO> findAllReservations(Pageable pageable){
+        return repository.findAll(pageable).map(mapper::toDto);
     }
 
     @Override

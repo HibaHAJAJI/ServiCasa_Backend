@@ -7,7 +7,6 @@ import ServiCasa.dto.response.ClientResponseDTO;
 import ServiCasa.entity.Client;
 import org.mapstruct.MappingTarget;
 
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ClientMapper {
@@ -18,7 +17,6 @@ public interface ClientMapper {
 
      ClientResponseDTO toDto(Client client);
 
-     List<ClientResponseDTO>toDtoList(List<Client>clients);
 
      @Mapping(target = "id",ignore = true)
      void updateClientDto(ClientRequestDTO dto, @MappingTarget Client client);

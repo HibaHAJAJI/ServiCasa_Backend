@@ -10,11 +10,12 @@ import ServiCasa.repository.ArtisanRepository;
 import ServiCasa.repository.DisponibiliteRepository;
 import ServiCasa.service.DisponibiliteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 
 
 @Service
@@ -37,8 +38,8 @@ public class DisponibiliteImpl implements DisponibiliteService {
     }
 
     @Override
-    public List<DisponibiliteResponseDTO> findAllDisponibilites(){
-       return mapper.toDtoList(repository.findAll());
+    public Page<DisponibiliteResponseDTO> findAllDisponibilites(Pageable pageable){
+       return repository.findAll(pageable).map(mapper::toDto);
 
     }
 

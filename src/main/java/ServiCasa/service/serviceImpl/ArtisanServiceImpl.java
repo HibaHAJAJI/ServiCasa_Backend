@@ -10,11 +10,13 @@ import ServiCasa.service.ArtisanService;
 import ServiCasa.enums.Role;
 import ServiCasa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -47,9 +49,9 @@ public class ArtisanServiceImpl implements ArtisanService {
    }
 
 
-    @Override
-   public List<ArtisanResponseDTO> findAllArtisans(){
-        return mapper.toDtoList(repository.findAll());
+   @Override
+   public Page<ArtisanResponseDTO> findAllArtisans(Pageable pageable){
+        return  repository.findAll(pageable).map(mapper::toDto);
   }
 
    public ArtisanResponseDTO updateArtisan(Long id, ArtisanRequestDTO dto){
