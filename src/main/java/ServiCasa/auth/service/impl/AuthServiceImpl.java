@@ -3,9 +3,12 @@ package ServiCasa.auth.service.impl;
 import ServiCasa.auth.dto.AuthRequestDTO;
 import ServiCasa.auth.dto.AuthResponseDTO;
 import ServiCasa.auth.service.AuthService;
-import ServiCasa.dto.request.UserRegisterRequest;
+import ServiCasa.dto.request.ArtisanRequestDTO;
+import ServiCasa.entity.Artisan;
 import ServiCasa.entity.User;
-import ServiCasa.mapper.UserMapper;
+import ServiCasa.enums.Role;
+import ServiCasa.mapper.ArtisanMapper;
+import ServiCasa.repository.ArtisanRepository;
 import ServiCasa.repository.UserRepository;
 import ServiCasa.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +25,10 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final ArtisanMapper artisanMapper;
+    private final ArtisanRepository artisanRepository;
 
     @Override
     public AuthResponseDTO login(AuthRequestDTO dto){
@@ -44,18 +48,20 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public AuthResponseDTO register(UserRegisterRequest dto){
+    public AuthResponseDTO registerArtisan(ArtisanRequestDTO request){
 
-            if(userRepository.findByEmail(dto.getEmail()).isPresent()){
+            if(userRepository.findByEmail(request.getEmail()).isPresent()){
                 throw new ResponseStatusException(HttpStatus.CONFLICT,("Email déjà exists"));
             }
 
-            User user =userMapper.toEntity(dto);
-            user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-            User savedUser = userRepository.save(user);
+            Artisan artisan =artisanMapper.toEntity(request);
+            artisan.setPassword(passwordEncoder.encode(request.getPassword()));
+            artisan.setRole(Role.ARTISAN);
 
-            String token = jwtService.generateToken(savedUser);
+            Artisan savedArtisan = artisanRepository.save(artisan);
+
+            String token = jwtService.generateToken(savedArtisan);
 
             return new AuthResponseDTO(token);
 
