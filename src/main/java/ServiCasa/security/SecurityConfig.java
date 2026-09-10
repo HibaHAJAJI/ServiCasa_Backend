@@ -24,6 +24,7 @@ public class SecurityConfig {
             HttpSecurity http) throws Exception {
 
         return http
+                .cors(cros->{})
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
