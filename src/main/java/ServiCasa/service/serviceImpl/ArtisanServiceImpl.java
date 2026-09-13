@@ -73,11 +73,18 @@ public class ArtisanServiceImpl implements ArtisanService {
    }
 
    @Override
-    public Page<ArtisanResponseDTO> findBySpecialiteArtisan(String specialite,Pageable pageable){
-      Page <Artisan>artisans = repository.findBySpecialiteContainingIgnoreCase(specialite,pageable);
-      return artisans.map(mapper::toDto);
+    public Page<ArtisanResponseDTO> findBySpecialiteArtisan(String specialite,Pageable pageable) {
+       Page<Artisan> artisans = repository.findBySpecialiteContainingIgnoreCase(specialite, pageable);
+       return artisans.map(mapper::toDto);
+   }
+
+    @Override
+    public Page<ArtisanResponseDTO>  findByVilleArtisan(String ville,Pageable pageable){
+        Page<Artisan>artisans=repository.findByVilleContainingIgnoreCase(ville,pageable);
+        return artisans.map(mapper::toDto);
+       }
 
    }
 
 
-}
+

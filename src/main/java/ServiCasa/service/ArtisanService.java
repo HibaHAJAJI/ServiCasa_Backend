@@ -22,4 +22,6 @@ public interface ArtisanService {
 
     Page<ArtisanResponseDTO> findBySpecialiteArtisan(String specialite,Pageable pageable);
 
+    Page<ArtisanResponseDTO> findByVilleArtisan(String ville,Pageable pageable);
+
 }

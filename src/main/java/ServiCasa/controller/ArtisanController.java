@@ -47,4 +47,9 @@ public class ArtisanController {
     public Page<ArtisanResponseDTO> getArtisanBySpecialite(String specialite,Pageable pageable){
         return artisanService.findBySpecialiteArtisan(specialite,pageable);
     }
+
+    @GetMapping("/ville")
+    public Page<ArtisanResponseDTO> getArtisanByVille(String ville,Pageable pageable) {
+        return artisanService.findBySpecialiteArtisan(ville, pageable);
+    }
 }

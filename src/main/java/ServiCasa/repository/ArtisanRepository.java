@@ -10,5 +10,8 @@ public interface ArtisanRepository extends JpaRepository<Artisan,Long> {
 
     Page<Artisan> findBySpecialiteContainingIgnoreCase(String specialite, Pageable pageable);
 
+    Page<Artisan> findByVilleContainingIgnoreCase(String ville, Pageable pageable);
+
+
 
 }
