@@ -39,5 +39,10 @@ public class ReservationController {
         return reservationService.findReservationById(id);
     }
 
+    @GetMapping("/client/{clientId}")
+    public Page <ReservationResponseDTO> getReservationsByClient(Long clientId,Pageable pageable){
+        return reservationService.findReservationsByClient(clientId,pageable);
+    }
+
 
 }

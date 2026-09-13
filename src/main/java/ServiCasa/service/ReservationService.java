@@ -17,5 +17,6 @@ public interface ReservationService {
 
     ReservationResponseDTO updateReservation(Long id, ReservationRequestDTO dto);
 
+    Page<ReservationResponseDTO> findReservationsByClient(Long clientId,Pageable pageable);
 
 }

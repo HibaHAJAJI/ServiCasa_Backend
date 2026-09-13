@@ -66,7 +66,12 @@ public class ReservationImpl implements ReservationService {
         mapper.updateReservationDto(dto,reservation);
         return  mapper.toDto(repository.save(reservation));
 
+    }
 
+    @Override
+   public Page <ReservationResponseDTO> findReservationsByClient(Long clientId,Pageable pageable){
+        Page<Reservation>reservations=repository.findByClientId(clientId,pageable);
+        return reservations.map(mapper::toDto);
     }
 
 
