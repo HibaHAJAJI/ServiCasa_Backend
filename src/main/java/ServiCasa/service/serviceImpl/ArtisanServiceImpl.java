@@ -72,5 +72,12 @@ public class ArtisanServiceImpl implements ArtisanService {
         repository.deleteById(id);
    }
 
+   @Override
+    public Page<ArtisanResponseDTO> findBySpecialiteArtisan(String specialite,Pageable pageable){
+      Page <Artisan>artisans = repository.findBySpecialiteContainingIgnoreCase(specialite,pageable);
+      return artisans.map(mapper::toDto);
+
+   }
+
 
 }

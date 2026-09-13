@@ -33,7 +33,6 @@ public class ArtisanController {
         return artisanService.findAllArtisans(pageable);
     }
 
-
     @GetMapping("/{id}")
     public ArtisanResponseDTO getById(@PathVariable Long id){
         return artisanService.findArtisanById(id);
@@ -42,5 +41,10 @@ public class ArtisanController {
     @DeleteMapping("/{id}")
     public void deleteArtisanById(@PathVariable Long id){
         artisanService.deleteArtisan(id);
+    }
+
+    @GetMapping("/specialite")
+    public Page<ArtisanResponseDTO> getArtisanBySpecialite(String specialite,Pageable pageable){
+        return artisanService.findBySpecialiteArtisan(specialite,pageable);
     }
 }
