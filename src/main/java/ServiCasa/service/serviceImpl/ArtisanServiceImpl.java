@@ -4,6 +4,7 @@ package ServiCasa.service.serviceImpl;
 import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.response.ArtisanResponseDTO;
 import ServiCasa.entity.Artisan;
+import ServiCasa.enums.SpecialiteArtisan;
 import ServiCasa.mapper.ArtisanMapper;
 import ServiCasa.repository.ArtisanRepository;
 import ServiCasa.service.ArtisanService;
@@ -73,7 +74,7 @@ public class ArtisanServiceImpl implements ArtisanService {
    }
 
    @Override
-    public Page<ArtisanResponseDTO> findBySpecialiteArtisan(String specialite,Pageable pageable) {
+    public Page<ArtisanResponseDTO> findBySpecialiteArtisan(SpecialiteArtisan specialite, Pageable pageable) {
        Page<Artisan> artisans = repository.findBySpecialiteContainingIgnoreCase(specialite, pageable);
        return artisans.map(mapper::toDto);
    }

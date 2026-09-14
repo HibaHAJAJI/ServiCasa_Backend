@@ -1,5 +1,6 @@
 package ServiCasa.entity;
 
+import ServiCasa.enums.SpecialiteArtisan;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @PrimaryKeyJoinColumn(name = "id")
 public class Artisan extends User {
 
-    private String specialite;
+    private SpecialiteArtisan specialite;
 
     private Integer anneesExperience;
 

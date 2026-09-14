@@ -4,6 +4,7 @@ package ServiCasa.service;
 import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.response.ArtisanResponseDTO;
 import ServiCasa.entity.Artisan;
+import ServiCasa.enums.SpecialiteArtisan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,7 +21,7 @@ public interface ArtisanService {
 
     void deleteArtisan(Long id);
 
-    Page<ArtisanResponseDTO> findBySpecialiteArtisan(String specialite,Pageable pageable);
+    Page<ArtisanResponseDTO> findBySpecialiteArtisan(SpecialiteArtisan specialite, Pageable pageable);
 
     Page<ArtisanResponseDTO> findByVilleArtisan(String ville,Pageable pageable);
 
