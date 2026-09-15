@@ -5,10 +5,12 @@ import ServiCasa.dto.request.ReservationRequestDTO;
 import ServiCasa.dto.response.ReservationResponseDTO;
 import ServiCasa.entity.Artisan;
 import ServiCasa.entity.Client;
+import ServiCasa.entity.DemandeService;
 import ServiCasa.entity.Reservation;
 import ServiCasa.mapper.ReservationMapper;
 import ServiCasa.repository.ArtisanRepository;
 import ServiCasa.repository.ClientRepository;
+import ServiCasa.repository.DemandeServiceRepository;
 import ServiCasa.repository.ReservationRepository;
 import ServiCasa.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class ReservationImpl implements ReservationService {
     private final ReservationRepository repository;
     private final ClientRepository clientRepository;
     private final ArtisanRepository artisanRepository;
+    private final DemandeServiceRepository demandeServiceRepository;
 
     @Override
     public ReservationResponseDTO addReservation(ReservationRequestDTO dto){
@@ -36,10 +39,13 @@ public class ReservationImpl implements ReservationService {
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND ,"Aucun Artisan !"));
         Client client =clientRepository.findById(dto.getClientId())
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND ,"Aucun Client !"));
+        DemandeService demandeService = demandeServiceRepository.findById(dto.getDemandeServiceId())
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND ,"Aucun service demandé !"));
 
         Reservation reservation = mapper.toEntity(dto);
         reservation.setArtisan(artisan);
         reservation.setClient(client);
+        reservation.setDemandeService(demandeService);
 
         return mapper.toDto(repository.save(reservation));
 
@@ -64,6 +70,18 @@ public class ReservationImpl implements ReservationService {
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND ,"Aucun reservation !"));
 
         mapper.updateReservationDto(dto,reservation);
+
+        Artisan artisan= artisanRepository.findById(dto.getArtisanId())
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND ,"Aucun Artisan !"));
+        Client client =clientRepository.findById(dto.getClientId())
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND ,"Aucun Client !"));
+        DemandeService demandeService = demandeServiceRepository.findById(dto.getDemandeServiceId())
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND ,"Aucun service demandé !"));
+
+        reservation.setArtisan(artisan);
+        reservation.setClient(client);
+        reservation.setDemandeService(demandeService);
+
         return  mapper.toDto(repository.save(reservation));
 
     }

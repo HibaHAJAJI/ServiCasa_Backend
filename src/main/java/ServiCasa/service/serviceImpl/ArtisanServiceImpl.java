@@ -4,7 +4,6 @@ package ServiCasa.service.serviceImpl;
 import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.response.ArtisanResponseDTO;
 import ServiCasa.entity.Artisan;
-import ServiCasa.enums.SpecialiteArtisan;
 import ServiCasa.mapper.ArtisanMapper;
 import ServiCasa.repository.ArtisanRepository;
 import ServiCasa.service.ArtisanService;
@@ -14,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,16 +26,18 @@ public class ArtisanServiceImpl implements ArtisanService {
     private final ArtisanMapper mapper;
     private final ArtisanRepository repository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
     public ArtisanResponseDTO addArtisan(ArtisanRequestDTO dto){
 
-       if(!userRepository.existsByEmail(dto.getEmail())){
+       if(userRepository.existsByEmail(dto.getEmail())){
            throw new ResponseStatusException(HttpStatus.CONFLICT, "Cet email est déjà utilisé !");
        }
 
        Artisan artisan = mapper.toEntity(dto);
+       artisan.setPassword(passwordEncoder.encode(dto.getPassword()));
        artisan.setRole(Role.ARTISAN);
 
        return mapper.toDto(repository.save(artisan));
@@ -68,20 +70,20 @@ public class ArtisanServiceImpl implements ArtisanService {
     @Override
    public void deleteArtisan(Long id){
         if(!repository.existsById(id)){
-            new ResponseStatusException(HttpStatus.NOT_FOUND,"Artisan introuvable !");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Artisan introuvable !");
         }
         repository.deleteById(id);
    }
 
    @Override
-    public Page<ArtisanResponseDTO> findBySpecialiteArtisan(SpecialiteArtisan specialite, Pageable pageable) {
-       Page<Artisan> artisans = repository.findBySpecialiteContainingIgnoreCase(specialite, pageable);
+    public Page<ArtisanResponseDTO> findBySpecialiteArtisan(String specialite, Pageable pageable) {
+       Page<Artisan> artisans = repository.findBySpecialite(specialite, pageable);
        return artisans.map(mapper::toDto);
    }
 
     @Override
-    public Page<ArtisanResponseDTO>  findByVilleArtisan(String ville,Pageable pageable){
-        Page<Artisan>artisans=repository.findByVilleContainingIgnoreCase(ville,pageable);
+    public Page<ArtisanResponseDTO>  findByVilleArtisan(String ville, Pageable pageable){
+        Page<Artisan>artisans=repository.findByVille(ville,pageable);
         return artisans.map(mapper::toDto);
        }
 

@@ -40,7 +40,7 @@ public class ReservationController {
     }
 
     @GetMapping("/client/{clientId}")
-    public Page <ReservationResponseDTO> getReservationsByClient(Long clientId,Pageable pageable){
+    public Page <ReservationResponseDTO> getReservationsByClient(@PathVariable Long clientId,Pageable pageable){
         return reservationService.findReservationsByClient(clientId,pageable);
     }
 

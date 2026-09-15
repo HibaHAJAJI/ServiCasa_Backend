@@ -15,6 +15,8 @@ public interface DisponibiliteService {
 
     Page<DisponibiliteResponseDTO> findAllDisponibilites(Pageable pageable);
 
+    DisponibiliteResponseDTO findDisponibiliteById(Long id);
+
     DisponibiliteResponseDTO findDisponibiliteByArtisan(Long artisanId);
 
     DisponibiliteResponseDTO updateDisponibilite(DisponibiliteRequestDTO dto, Long id);

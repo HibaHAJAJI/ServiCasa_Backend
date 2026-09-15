@@ -3,10 +3,10 @@ package ServiCasa.repository;
 import ServiCasa.entity.Disponibilite;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 
 public interface DisponibiliteRepository extends JpaRepository<Disponibilite,Long> {
 
-    Optional<Disponibilite> findByArtisanId(Long artisanId);
+    List<Disponibilite> findByArtisanId(Long artisanId);
 }

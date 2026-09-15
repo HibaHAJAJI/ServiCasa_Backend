@@ -1,7 +1,6 @@
 package ServiCasa.dto.response;
 
 
-import ServiCasa.enums.SpecialiteArtisan;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

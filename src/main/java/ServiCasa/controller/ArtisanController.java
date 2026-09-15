@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 
+
 @RestController
 @RequestMapping("/api/artisans")
 @RequiredArgsConstructor
@@ -44,12 +45,14 @@ public class ArtisanController {
     }
 
     @GetMapping("/specialite")
-    public Page<ArtisanResponseDTO> getArtisanBySpecialite(String specialite,Pageable pageable){
+    public Page<ArtisanResponseDTO> getArtisanBySpecialite(String specialite, Pageable pageable){
         return artisanService.findBySpecialiteArtisan(specialite,pageable);
     }
 
+
     @GetMapping("/ville")
     public Page<ArtisanResponseDTO> getArtisanByVille(String ville,Pageable pageable) {
-        return artisanService.findBySpecialiteArtisan(ville, pageable);
+        return artisanService.findByVilleArtisan(ville, pageable);
     }
+
 }

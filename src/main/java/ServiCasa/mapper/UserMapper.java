@@ -18,6 +18,9 @@ public interface UserMapper {
     UserResponse toDto(User user);
 
     @Mapping(target = "id",ignore = true)
+    @Mapping(target = "password",ignore = true)
+    @Mapping(target = "email",ignore = true)
+    @Mapping(target = "role",ignore = true)
     void updateUserDto(UserRegisterRequest dto, @MappingTarget User user);
 
 }

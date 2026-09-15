@@ -35,8 +35,8 @@ public class DisponibiliteController {
     }
 
     @GetMapping("/{id}")
-    public DisponibiliteResponseDTO getDisponibiliteByArtisan(@PathVariable Long id){
-        return disponibiliteService.findDisponibiliteByArtisan(id);
+    public DisponibiliteResponseDTO getDisponibiliteById(@PathVariable Long id){
+        return disponibiliteService.findDisponibiliteById(id);
     }
 
     @DeleteMapping("/{id}")

@@ -3,8 +3,10 @@ package ServiCasa.service.serviceImpl;
 
 import ServiCasa.dto.request.DemandeServiceRequestDTO;
 import ServiCasa.dto.response.DemandeServiceResponseDTO;
+import ServiCasa.entity.Categorie;
 import ServiCasa.entity.DemandeService;
 import ServiCasa.mapper.DemandeServiceMapper;
+import ServiCasa.repository.CategorieRepository;
 import ServiCasa.repository.DemandeServiceRepository;
 import ServiCasa.service.DemandeServiceService;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +24,15 @@ public class DemandeServiceImpl implements DemandeServiceService {
 
     private final DemandeServiceMapper mapper;
     private final DemandeServiceRepository repository;
+    private final CategorieRepository categorieRepository;
 
 
     @Override
     public DemandeServiceResponseDTO addDemandeService(DemandeServiceRequestDTO dto){
+     Categorie categorie = categorieRepository.findById(dto.getCategorieId())
+             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Catégorie introuvable !"));
      DemandeService demandeService = mapper.toEntity(dto);
+     demandeService.setCategorie(categorie);
        return mapper.toDto(repository.save(demandeService));
     }
 
@@ -43,12 +49,16 @@ public class DemandeServiceImpl implements DemandeServiceService {
         return repository.findAll(pageable).map(mapper::toDto);
   }
 
-  @Override
-   public DemandeServiceResponseDTO updateDemandeService(Long id, DemandeServiceRequestDTO dto){
+@Override
+    public DemandeServiceResponseDTO updateDemandeService(Long id, DemandeServiceRequestDTO dto){
         DemandeService demandeService= repository.findById(id).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND,"Demande Service introuvable !"));
 
+        Categorie categorie = categorieRepository.findById(dto.getCategorieId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Catégorie introuvable !"));
+
         mapper.updateDemandeServiceDto(dto,demandeService);
+        demandeService.setCategorie(categorie);
         DemandeService update=repository.save(demandeService);
 
         return mapper.toDto(update);

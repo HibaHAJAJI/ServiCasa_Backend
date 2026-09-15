@@ -23,6 +23,6 @@ public class DisponibiliteResponseDTO {
 
     private Boolean disponible;
 
-    private Long artisanId;;
+    private Long artisanId;
 
 }

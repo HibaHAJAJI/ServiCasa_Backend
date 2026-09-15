@@ -44,9 +44,16 @@ public class DisponibiliteImpl implements DisponibiliteService {
     }
 
     @Override
-   public DisponibiliteResponseDTO findDisponibiliteByArtisan(Long artisanId){
+   public DisponibiliteResponseDTO findDisponibiliteById(Long id){
+        Disponibilite disponibilite = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disponibilite introuvable !"));
+        return mapper.toDto(disponibilite);
+   }
 
+    @Override
+   public DisponibiliteResponseDTO findDisponibiliteByArtisan(Long artisanId){
         Disponibilite disponibilite = repository.findByArtisanId(artisanId)
+                .stream().findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucune disponibilite pour cet artisan !"));
        return mapper.toDto(disponibilite);
 
