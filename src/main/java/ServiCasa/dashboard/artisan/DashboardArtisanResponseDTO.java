@@ -1,4 +1,4 @@
-package ServiCasa.dashboard;
+package ServiCasa.dashboard.artisan;
 
 import lombok.Data;
 
