@@ -3,15 +3,10 @@ package ServiCasa.service.serviceImpl;
 
 import ServiCasa.dto.request.ReservationRequestDTO;
 import ServiCasa.dto.response.ReservationResponseDTO;
-import ServiCasa.entity.Artisan;
-import ServiCasa.entity.Client;
-import ServiCasa.entity.DemandeService;
-import ServiCasa.entity.Reservation;
+import ServiCasa.entity.*;
+import ServiCasa.enums.StatutReservation;
 import ServiCasa.mapper.ReservationMapper;
-import ServiCasa.repository.ArtisanRepository;
-import ServiCasa.repository.ClientRepository;
-import ServiCasa.repository.DemandeServiceRepository;
-import ServiCasa.repository.ReservationRepository;
+import ServiCasa.repository.*;
 import ServiCasa.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +26,7 @@ public class ReservationImpl implements ReservationService {
     private final ClientRepository clientRepository;
     private final ArtisanRepository artisanRepository;
     private final DemandeServiceRepository demandeServiceRepository;
+    private final UserRepository userRepository;
 
     @Override
     public ReservationResponseDTO addReservation(ReservationRequestDTO dto){
@@ -93,6 +89,19 @@ public class ReservationImpl implements ReservationService {
     }
 
 
+    @Override
+    public Page<ReservationResponseDTO> getPendingReservationsByArtisan(String email, Pageable pageable) {
+
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
+
+        Artisan artisan = artisanRepository.findById(user.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artisan introuvable"));
+
+        Page<Reservation> reservations = repository.findByArtisanIdAndStatutReservation(artisan.getId(), StatutReservation.EN_ATTENTE, pageable);
+
+        return reservations.map(mapper::toDto);
+    }
 
 
 

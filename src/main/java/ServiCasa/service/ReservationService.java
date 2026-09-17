@@ -19,4 +19,6 @@ public interface ReservationService {
 
     Page<ReservationResponseDTO> findReservationsByClient(Long clientId,Pageable pageable);
 
+    Page<ReservationResponseDTO> getPendingReservationsByArtisan(String email, Pageable pageable);
+
 }

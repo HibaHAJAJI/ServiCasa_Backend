@@ -12,4 +12,6 @@ public interface ReservationRepository extends JpaRepository<Reservation,Long> {
     Page<Reservation> findByClientId(Long clientId, Pageable pageable);
 
     long countByArtisan_IdAndStatutReservation(Long artisanId, StatutReservation statutReservation);
+
+    Page<Reservation> findByArtisanIdAndStatutReservation(Long artisanId, StatutReservation statutReservation, Pageable pageable);
 }

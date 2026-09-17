@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -42,6 +43,13 @@ public class ReservationController {
     @GetMapping("/client/{clientId}")
     public Page <ReservationResponseDTO> getReservationsByClient(@PathVariable Long clientId,Pageable pageable){
         return reservationService.findReservationsByClient(clientId,pageable);
+    }
+
+    @GetMapping("/artisan/demandes")
+    public Page<ReservationResponseDTO>getPendingReservations(Pageable pageable, Authentication authentication) {
+        String email = authentication.getName();
+
+        return reservationService.getPendingReservationsByArtisan(email, pageable);
     }
 
 
