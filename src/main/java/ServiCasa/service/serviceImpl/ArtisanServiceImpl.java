@@ -3,6 +3,7 @@ package ServiCasa.service.serviceImpl;
 
 import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.response.ArtisanResponseDTO;
+import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
 import ServiCasa.entity.Artisan;
 import ServiCasa.mapper.ArtisanMapper;
 import ServiCasa.repository.ArtisanRepository;
@@ -57,7 +58,7 @@ public class ArtisanServiceImpl implements ArtisanService {
         return  repository.findAll(pageable).map(mapper::toDto);
   }
 
-   public ArtisanResponseDTO updateArtisan(Long id, ArtisanRequestDTO dto){
+   public ArtisanResponseDTO updateArtisan(Long id, ArtisanUpdateRequestDTO dto){
         Artisan artisan= repository.findById(id).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND,"Artisan introuvable !"));
 

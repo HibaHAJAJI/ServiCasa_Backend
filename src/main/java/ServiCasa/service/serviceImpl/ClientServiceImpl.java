@@ -1,5 +1,6 @@
 package ServiCasa.service.serviceImpl;
 
+import ServiCasa.dto.updateDto.ClientUpdateRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,7 +54,7 @@ public class ClientServiceImpl implements ClientService {
 
 
     @Override
-    public ClientResponseDTO updateClient(ClientRequestDTO dto, Long id){
+    public ClientResponseDTO updateClient(ClientUpdateRequestDTO dto, Long id){
         Client client=repository.findById(id).orElseThrow(()
                 ->new ResponseStatusException(HttpStatus.NOT_FOUND, "Client introuvable !"));
 

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ArtisanResponseDTO extends UserResponse {
 
-    private SpecialiteArtisan specialite;
+    private String specialite;
 
     private Integer anneesExperience;
 

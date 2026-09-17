@@ -2,6 +2,7 @@ package ServiCasa.controller;
 
 import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.response.ArtisanResponseDTO;
+import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
 import ServiCasa.service.ArtisanService;
 
 import jakarta.validation.Valid;
@@ -25,7 +26,7 @@ public class ArtisanController {
     }
 
     @PutMapping("/{id}")
-    public ArtisanResponseDTO updateArtisan(@Valid @RequestBody ArtisanRequestDTO dto, @PathVariable Long id){
+    public ArtisanResponseDTO updateArtisan(@Valid @RequestBody ArtisanUpdateRequestDTO dto, @PathVariable Long id){
         return artisanService.updateArtisan(id,dto);
     }
 
@@ -43,6 +44,7 @@ public class ArtisanController {
     public void deleteArtisanById(@PathVariable Long id){
         artisanService.deleteArtisan(id);
     }
+
 
     @GetMapping("/specialite")
     public Page<ArtisanResponseDTO> getArtisanBySpecialite(String specialite, Pageable pageable){

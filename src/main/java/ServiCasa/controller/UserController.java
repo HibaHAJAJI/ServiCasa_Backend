@@ -1,34 +1,46 @@
 package ServiCasa.controller;
 
-import ServiCasa.dto.request.UserRegisterRequest;
 import ServiCasa.dto.response.UserResponse;
-import ServiCasa.mapper.UserMapper;
-import ServiCasa.repository.UserRepository;
+import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
+import ServiCasa.dto.updateDto.ClientUpdateRequestDTO;
+import ServiCasa.dto.updateDto.UserUpdateRequestDTO;
+import ServiCasa.entity.User;
 import ServiCasa.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("api/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+
 
     @GetMapping("/profile")
-    public UserResponse getCurrentUser(Authentication authentication) {
-        return userRepository.findByEmail(authentication.getName())
-                .map(userMapper::toDto)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
+    public ResponseEntity<User>  getProfile(Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(userService.getProfile(email)) ;
+    }
+
+    @PutMapping("/client/profile")
+    public ResponseEntity<UserResponse> updateClientProfile(Authentication authentication, @RequestBody ClientUpdateRequestDTO dto) {
+        UserResponse response = userService.updateClientProfile(authentication.getName(), dto);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/artisan/profile")
+    public ResponseEntity<UserResponse> updateArtisanProfile(Authentication authentication, @RequestBody ArtisanUpdateRequestDTO dto) {
+        UserResponse response = userService.updateArtisanProfile(authentication.getName(), dto);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/profile")
-    public UserResponse updateProfile(Authentication authentication, @RequestBody UserRegisterRequest dto) {
-        return userService.updateCurrentUser(authentication.getName(), dto);
+    public ResponseEntity<UserResponse> updateAdminProfile(Authentication authentication, @RequestBody UserUpdateRequestDTO dto) {
+        UserResponse response = userService.updateUserProfile(authentication.getName(), dto);
+        return ResponseEntity.ok(response);
     }
 }

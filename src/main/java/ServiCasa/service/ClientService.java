@@ -3,6 +3,7 @@ package ServiCasa.service;
 
 import ServiCasa.dto.request.ClientRequestDTO;
 import ServiCasa.dto.response.ClientResponseDTO;
+import ServiCasa.dto.updateDto.ClientUpdateRequestDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,7 +17,7 @@ public interface ClientService {
 
       ClientResponseDTO findById(Long id);
 
-      ClientResponseDTO updateClient(ClientRequestDTO dto,Long id);
+      ClientResponseDTO updateClient(ClientUpdateRequestDTO dto, Long id);
 
      void deleteClient(Long id);
 

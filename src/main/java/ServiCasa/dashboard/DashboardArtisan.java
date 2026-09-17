@@ -15,26 +15,9 @@ public class DashboardArtisan {
 
         DashboardArtisanResponseDTO dto = new DashboardArtisanResponseDTO();
 
-        dto.setNouvellesDemandes(
-                reservationRepository.countByArtisanIdAndStatut(
-                        artisanId,
-                        StatutReservation.EN_ATTENTE
-                )
-        );
-
-        dto.setInterventionsEnCours(
-                reservationRepository.countByArtisanIdAndStatut(
-                        artisanId,
-                        StatutReservation.EN_COURS
-                )
-        );
-
-        dto.setInterventionsTerminees(
-                reservationRepository.countByArtisanIdAndStatut(
-                        artisanId,
-                        StatutReservation.TERMINEE
-                )
-        );
+        dto.setNouvellesDemandes(reservationRepository.countByArtisan_IdAndStatutReservation(artisanId, StatutReservation.EN_ATTENTE));
+        dto.setInterventionsEnCours(reservationRepository.countByArtisan_IdAndStatutReservation(artisanId,StatutReservation.EN_COURS));
+        dto.setInterventionsTerminees(reservationRepository.countByArtisan_IdAndStatutReservation(artisanId, StatutReservation.TERMINEE));
 
         return dto;
     }

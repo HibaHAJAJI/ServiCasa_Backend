@@ -1,6 +1,7 @@
 package ServiCasa.mapper;
 
 import ServiCasa.dto.request.ArtisanRequestDTO;
+import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
 import org.mapstruct.Mapper;
 import ServiCasa.dto.response.ArtisanResponseDTO;
 import ServiCasa.entity.Artisan;
@@ -17,5 +18,5 @@ public interface ArtisanMapper {
      ArtisanResponseDTO toDto(Artisan artisan);
 
      @Mapping(target = "id",ignore = true)
-     void updateArtisanDto(ArtisanRequestDTO dto, @MappingTarget Artisan artisan);
+     void updateArtisanDto(ArtisanUpdateRequestDTO dto, @MappingTarget Artisan artisan);
 }

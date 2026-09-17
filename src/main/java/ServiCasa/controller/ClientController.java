@@ -2,6 +2,7 @@ package ServiCasa.controller;
 
 import ServiCasa.dto.request.ClientRequestDTO;
 import ServiCasa.dto.response.ClientResponseDTO;
+import ServiCasa.dto.updateDto.ClientUpdateRequestDTO;
 import ServiCasa.service.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ClientResponseDTO updateClient(@Valid @RequestBody ClientRequestDTO dto,@PathVariable Long id){
+    public ClientResponseDTO updateClient(@Valid @RequestBody ClientUpdateRequestDTO dto, @PathVariable Long id){
         return clientService.updateClient(dto,id);
     }
 

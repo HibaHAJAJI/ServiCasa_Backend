@@ -1,5 +1,6 @@
 package ServiCasa.mapper;
 
+import ServiCasa.dto.updateDto.ClientUpdateRequestDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ServiCasa.dto.request.ClientRequestDTO;
@@ -19,5 +20,5 @@ public interface ClientMapper {
 
 
      @Mapping(target = "id",ignore = true)
-     void updateClientDto(ClientRequestDTO dto, @MappingTarget Client client);
+     void updateClientDto(ClientUpdateRequestDTO dto, @MappingTarget Client client);
 }
