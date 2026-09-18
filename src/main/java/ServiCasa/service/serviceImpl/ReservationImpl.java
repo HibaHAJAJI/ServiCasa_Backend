@@ -103,6 +103,11 @@ public class ReservationImpl implements ReservationService {
         return reservations.map(mapper::toDto);
     }
 
+    @Override
+   public Page<ReservationResponseDTO> getLatestReservations(Pageable pageable){
+        return repository.findAllByOrderByDateReservationDesc(pageable).map(mapper::toDto);
+    }
+
 
 
 }

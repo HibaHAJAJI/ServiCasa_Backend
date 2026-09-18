@@ -53,4 +53,8 @@ public class ReservationController {
     }
 
 
+    @GetMapping("/latest")
+    public Page<ReservationResponseDTO> getLatestReservations(Pageable pageable) {
+        return reservationService.getLatestReservations(pageable);
+    }
 }

@@ -21,4 +21,6 @@ public interface ReservationService {
 
     Page<ReservationResponseDTO> getPendingReservationsByArtisan(String email, Pageable pageable);
 
+    Page<ReservationResponseDTO> getLatestReservations(Pageable pageable);
+
 }
