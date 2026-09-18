@@ -5,7 +5,7 @@ import ServiCasa.auth.dto.AuthResponseDTO;
 import ServiCasa.auth.service.AuthService;
 import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.request.ClientRequestDTO;
-import ServiCasa.dto.request.UserRegisterRequest;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
 
     private final AuthService authService;
 

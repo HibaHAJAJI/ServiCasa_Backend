@@ -1,5 +1,6 @@
 package ServiCasa.entity;
 
+import ServiCasa.enums.StatutCompte;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,6 +27,9 @@ public class Artisan extends User {
     private String description;
 
     private String zoneIntervention;
+
+    @Enumerated(EnumType.STRING)
+    private StatutCompte statutCompte;
 
     @OneToMany(mappedBy = "artisan",cascade = CascadeType.ALL)
     @JsonIgnore

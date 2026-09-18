@@ -9,6 +9,7 @@ import ServiCasa.entity.Artisan;
 import ServiCasa.entity.Client;
 import ServiCasa.entity.User;
 import ServiCasa.enums.Role;
+import ServiCasa.enums.StatutCompte;
 import ServiCasa.mapper.ArtisanMapper;
 import ServiCasa.mapper.ClientMapper;
 import ServiCasa.repository.ArtisanRepository;
@@ -43,12 +44,17 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponseDTO login(AuthRequestDTO dto){
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken( dto.getEmail(),
-                        dto.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken( dto.getEmail(),dto.getPassword()));
 
         User user =userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.UNAUTHORIZED,("Identifiants invalides")));
+
+        if (user instanceof Artisan) {
+            Artisan artisan = (Artisan) user;
+            if (artisan.getStatutCompte() != StatutCompte.ACCEPTE) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Votre compte est en attente de validation par l'administrateur.");
+            }
+        }
 
         String token = jwtService.generateToken(user);
 
@@ -65,6 +71,7 @@ public class AuthServiceImpl implements AuthService {
 
             Artisan artisan =artisanMapper.toEntity(request);
             artisan.setPassword(passwordEncoder.encode(request.getPassword()));
+            artisan.setStatutCompte(StatutCompte.EN_ATTENTE);
             artisan.setRole(Role.ARTISAN);
 
             Artisan savedArtisan = artisanRepository.save(artisan);
