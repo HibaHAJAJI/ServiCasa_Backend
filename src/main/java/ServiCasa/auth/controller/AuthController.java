@@ -6,6 +6,7 @@ import ServiCasa.auth.service.AuthService;
 import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.request.ClientRequestDTO;
 
+import ServiCasa.dto.request.UserRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +36,11 @@ public class AuthController {
     @PostMapping("/register/client")
     public ResponseEntity<AuthResponseDTO> registerClient(@RequestBody ClientRequestDTO dto) {
         return ResponseEntity.ok(authService.registerClient(dto));
+    }
+
+    @PostMapping("/admin")
+    public AuthResponseDTO registerAdmin(@RequestBody UserRegisterRequest request){
+        return authService.registerAdmin(request);
     }
 
 }

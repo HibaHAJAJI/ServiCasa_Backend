@@ -18,7 +18,7 @@ public class UserRegisterRequest {
     @Pattern(regexp = "^[0-9]+$" ,message = "Le champs entrer uniquement les chiffres")
     private String telephone;
 
-    @NotNull(message = "La ville est obligatoire")
+    @NotBlank(message = "La ville est obligatoire")
     private String ville;
 
     @NotBlank(message = "L'email est obligatoire")

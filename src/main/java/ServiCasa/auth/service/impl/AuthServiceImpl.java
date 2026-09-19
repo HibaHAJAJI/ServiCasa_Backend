@@ -5,6 +5,7 @@ import ServiCasa.auth.dto.AuthResponseDTO;
 import ServiCasa.auth.service.AuthService;
 import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.request.ClientRequestDTO;
+import ServiCasa.dto.request.UserRegisterRequest;
 import ServiCasa.entity.Artisan;
 import ServiCasa.entity.Client;
 import ServiCasa.entity.User;
@@ -12,6 +13,7 @@ import ServiCasa.enums.Role;
 import ServiCasa.enums.StatutCompte;
 import ServiCasa.mapper.ArtisanMapper;
 import ServiCasa.mapper.ClientMapper;
+import ServiCasa.mapper.UserMapper;
 import ServiCasa.repository.ArtisanRepository;
 import ServiCasa.repository.ClientRepository;
 import ServiCasa.repository.UserRepository;
@@ -29,6 +31,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -96,6 +99,23 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtService.generateToken(savedClient);
 
         return new AuthResponseDTO(token);
+    }
+
+    public AuthResponseDTO registerAdmin(UserRegisterRequest request){
+
+        if(userRepository.findByEmail(request.getEmail()).isPresent()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,("Email déjà exists"));
+        }
+
+        User user = userMapper.toEntity(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.ADMIN);
+
+        User saved=userRepository.save(user);
+        String token = jwtService.generateToken(saved);
+        return new AuthResponseDTO(token);
+
+
     }
 
 

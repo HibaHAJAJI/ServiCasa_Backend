@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,18 +28,21 @@ public class UserController {
     }
 
     @PutMapping("/client/profile")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<UserResponse> updateClientProfile(Authentication authentication, @RequestBody ClientUpdateRequestDTO dto) {
         UserResponse response = userService.updateClientProfile(authentication.getName(), dto);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/artisan/profile")
+    @PreAuthorize("hasRole('ARTISAN')")
     public ResponseEntity<UserResponse> updateArtisanProfile(Authentication authentication, @RequestBody ArtisanUpdateRequestDTO dto) {
         UserResponse response = userService.updateArtisanProfile(authentication.getName(), dto);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/profile")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> updateAdminProfile(Authentication authentication, @RequestBody UserUpdateRequestDTO dto) {
         UserResponse response = userService.updateUserProfile(authentication.getName(), dto);
         return ResponseEntity.ok(response);
