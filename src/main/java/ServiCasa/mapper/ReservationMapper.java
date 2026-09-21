@@ -15,7 +15,12 @@ public interface ReservationMapper {
      Reservation toEntity(ReservationRequestDTO dto);
 
      @Mapping(target = "clientId", source = "client.id")
+     @Mapping(target = "clientNom", source = "client.nom")
+     @Mapping(target = "clientPrenom", source = "client.prenom")
      @Mapping(target = "artisanId", source = "artisan.id")
+     @Mapping(target = "artisanNom", source = "artisan.nom")
+     @Mapping(target = "artisanPrenom", source = "artisan.prenom")
+     @Mapping(target = "artisanSpecialite", source = "artisan.specialite")
      @Mapping(target = "demandeServiceId", source = "demandeService.id")
      @Mapping(target = "paiementId", source = "paiement.id")
      ReservationResponseDTO toDto(Reservation reservation);

@@ -24,13 +24,11 @@ public class ReservationRequestDTO {
     @NotBlank(message = "La description du problème est obligatoire")
     private String descriptionProbleme;
 
-    @NotNull(message = "Le client est obligatoire")
     private Long clientId;
 
     @NotNull(message = "L'artisan est obligatoire")
     private Long artisanId;
 
-    @NotNull(message = "Le service demandé est obligatoire")
     private Long demandeServiceId;
 
 

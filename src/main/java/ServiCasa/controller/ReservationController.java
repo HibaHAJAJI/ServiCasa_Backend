@@ -12,46 +12,65 @@ import org.springframework.web.bind.annotation.*;
 
 
 
+import org.springframework.http.ResponseEntity;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/reservations")
 @RequiredArgsConstructor
 public class ReservationController {
 
-
     private final ReservationService reservationService;
 
     @PostMapping
-    public ReservationResponseDTO createReservation(@Valid @RequestBody ReservationRequestDTO dto){
-        return reservationService.addReservation(dto);
+    public ReservationResponseDTO createReservation(@Valid @RequestBody ReservationRequestDTO dto, Authentication authentication) {
+        String email = authentication != null ? authentication.getName() : null;
+        return reservationService.addReservation(dto, email);
     }
 
-    @PutMapping("/{id}")
-    public ReservationResponseDTO updateReservation(@Valid @RequestBody ReservationRequestDTO dto, @PathVariable Long id){
-        return reservationService.updateReservation(id,dto);
-    }
-
-    @GetMapping
-    public Page<ReservationResponseDTO> getAllReservations(Pageable pageable){
-        return reservationService.findAllReservations(pageable);
-    }
-
-    @GetMapping("/{id}")
-    public ReservationResponseDTO getReservationByArtisan(@PathVariable Long id){
-        return reservationService.findReservationById(id);
-    }
-
-    @GetMapping("/client/{clientId}")
-    public Page <ReservationResponseDTO> getReservationsByClient(@PathVariable Long clientId,Pageable pageable){
-        return reservationService.findReservationsByClient(clientId,pageable);
+    @GetMapping("/client")
+    public List<ReservationResponseDTO> getMyReservations(Authentication authentication) {
+        String email = authentication.getName();
+        return reservationService.getMyReservations(email);
     }
 
     @GetMapping("/artisan/demandes")
-    public Page<ReservationResponseDTO>getPendingReservations(Pageable pageable, Authentication authentication) {
+    public Page<ReservationResponseDTO> getPendingReservations(Pageable pageable, Authentication authentication) {
         String email = authentication.getName();
-
         return reservationService.getPendingReservationsByArtisan(email, pageable);
     }
 
+    @GetMapping("/{id}")
+    public ReservationResponseDTO getReservationById(@PathVariable Long id) {
+        return reservationService.findReservationById(id);
+    }
+
+    @PatchMapping("/{id}/statut")
+    public ReservationResponseDTO updateStatus(@PathVariable Long id, @RequestParam ServiCasa.enums.StatutReservation statut, Authentication authentication) {
+        String email = authentication != null ? authentication.getName() : null;
+        return reservationService.updateReservationStatus(id, statut, email);
+    }
+
+    @DeleteMapping("/{id}/annuler")
+    public ResponseEntity<Void> cancelReservation(@PathVariable Long id) {
+        reservationService.cancelReservation(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ReservationResponseDTO updateReservation(@Valid @RequestBody ReservationRequestDTO dto, @PathVariable Long id) {
+        return reservationService.updateReservation(id, dto);
+    }
+
+    @GetMapping
+    public Page<ReservationResponseDTO> getAllReservations(Pageable pageable) {
+        return reservationService.findAllReservations(pageable);
+    }
+
+    @GetMapping("/client/{clientId}")
+    public Page<ReservationResponseDTO> getReservationsByClient(@PathVariable Long clientId, Pageable pageable) {
+        return reservationService.findReservationsByClient(clientId, pageable);
+    }
 
     @GetMapping("/latest")
     public Page<ReservationResponseDTO> getLatestReservations(Pageable pageable) {
