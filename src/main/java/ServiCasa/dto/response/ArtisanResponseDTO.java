@@ -22,4 +22,8 @@ public class ArtisanResponseDTO extends UserResponse {
 
     private String zoneIntervention;
 
+    private Double moyenneAvis;
+
+    private Long nombreAvis;
+
 }

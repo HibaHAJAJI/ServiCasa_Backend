@@ -15,6 +15,8 @@ public interface ArtisanMapper {
      @Mapping(target = "id",ignore = true)
      Artisan toEntity(ArtisanRequestDTO dto);
 
+     @Mapping(target = "moyenneAvis", ignore = true)
+     @Mapping(target = "nombreAvis", ignore = true)
      ArtisanResponseDTO toDto(Artisan artisan);
 
      @Mapping(target = "id",ignore = true)

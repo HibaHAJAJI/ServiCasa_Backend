@@ -7,6 +7,7 @@ import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
 import ServiCasa.entity.Artisan;
 import ServiCasa.mapper.ArtisanMapper;
 import ServiCasa.repository.ArtisanRepository;
+import ServiCasa.repository.AvisRepository;
 import ServiCasa.service.ArtisanService;
 import ServiCasa.enums.Role;
 import ServiCasa.repository.UserRepository;
@@ -19,13 +20,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 
-
 @Service
 @RequiredArgsConstructor
 public class ArtisanServiceImpl implements ArtisanService {
 
     private final ArtisanMapper mapper;
     private final ArtisanRepository repository;
+    private final AvisRepository avisRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -48,14 +49,19 @@ public class ArtisanServiceImpl implements ArtisanService {
    public ArtisanResponseDTO findArtisanById(Long id){
         Artisan artisan = repository.findById(id).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.NOT_FOUND,"Artisan introuvable !"));
-        return mapper.toDto(artisan);
+        ArtisanResponseDTO dto = mapper.toDto(artisan);
+        Double moyenne = avisRepository.getAverageNoteByArtisan(artisan);
+        Long nombre = avisRepository.countByArtisan(artisan);
+        dto.setMoyenneAvis(moyenne != null ? moyenne : 0.0);
+        dto.setNombreAvis(nombre != null ? nombre : 0L);
+        return dto;
 
    }
 
 
    @Override
    public Page<ArtisanResponseDTO> findAllArtisans(Pageable pageable){
-        return  repository.findAll(pageable).map(mapper::toDto);
+        return  repository.findAll(pageable).map(this::mapToDtoWithAvis);
   }
 
    public ArtisanResponseDTO updateArtisan(Long id, ArtisanUpdateRequestDTO dto){
@@ -79,16 +85,22 @@ public class ArtisanServiceImpl implements ArtisanService {
    @Override
     public Page<ArtisanResponseDTO> findBySpecialiteArtisan(String specialite, Pageable pageable) {
        Page<Artisan> artisans = repository.findBySpecialite(specialite, pageable);
-       return artisans.map(mapper::toDto);
+       return artisans.map(this::mapToDtoWithAvis);
    }
 
     @Override
     public Page<ArtisanResponseDTO>  findByVilleArtisan(String ville, Pageable pageable){
         Page<Artisan>artisans=repository.findByVille(ville,pageable);
-        return artisans.map(mapper::toDto);
+        return artisans.map(this::mapToDtoWithAvis);
        }
 
+   private ArtisanResponseDTO mapToDtoWithAvis(Artisan artisan) {
+       ArtisanResponseDTO dto = mapper.toDto(artisan);
+       Double moyenne = avisRepository.getAverageNoteByArtisan(artisan);
+       Long nombre = avisRepository.countByArtisan(artisan);
+       dto.setMoyenneAvis(moyenne != null ? moyenne : 0.0);
+       dto.setNombreAvis(nombre != null ? nombre : 0L);
+       return dto;
    }
 
-
-
+}
