@@ -39,4 +39,8 @@ public class Artisan extends User {
     @JsonIgnore
     private List<Disponibilite> disponibilites;
 
+    @OneToMany(mappedBy = "artisan", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Avis> avis;
+
 }

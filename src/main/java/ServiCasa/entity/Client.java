@@ -23,4 +23,8 @@ public class Client extends User {
     @JsonIgnore
     private List<Reservation> reservations;
 
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Avis> avis;
+
 }
