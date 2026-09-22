@@ -23,9 +23,9 @@ public class DashboardArtisan {
         Artisan artisan = artisanRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Artisan non trouvé"));
 
-        dto.setNouvellesDemandes(reservationRepository.countByArtisan_IdAndStatutReservation(artisan.getId(), StatutReservation.EN_ATTENTE));
-        dto.setInterventionsEnCours(reservationRepository.countByArtisan_IdAndStatutReservation(artisan.getId(), StatutReservation.EN_COURS));
-        dto.setInterventionsTerminees(reservationRepository.countByArtisan_IdAndStatutReservation(artisan.getId(), StatutReservation.TERMINEE));
+        dto.setNouvellesDemandes(reservationRepository.countByArtisanIdAndStatutReservation(artisan.getId(), StatutReservation.EN_ATTENTE));
+        dto.setInterventionsEnCours(reservationRepository.countByArtisanIdAndStatutReservation(artisan.getId(), StatutReservation.EN_COURS));
+        dto.setInterventionsTerminees(reservationRepository.countByArtisanIdAndStatutReservation(artisan.getId(), StatutReservation.TERMINEE));
 
         return dto;
     }

@@ -1,6 +1,5 @@
 package ServiCasa.service.serviceImpl;
 
-
 import ServiCasa.dto.request.ReservationRequestDTO;
 import ServiCasa.dto.response.ReservationResponseDTO;
 import ServiCasa.entity.*;
@@ -10,12 +9,18 @@ import ServiCasa.repository.*;
 import ServiCasa.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import ServiCasa.notification.dto.NotificationRequestDTO;
+import ServiCasa.notification.enums.NotificationType;
+import ServiCasa.notification.service.NotificationService;
 
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +32,7 @@ public class ReservationImpl implements ReservationService {
     private final ArtisanRepository artisanRepository;
     private final DemandeServiceRepository demandeServiceRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Override
     public ReservationResponseDTO addReservation(ReservationRequestDTO dto) {
@@ -39,12 +45,16 @@ public class ReservationImpl implements ReservationService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucun Artisan !"));
 
         Client client = null;
+
         if (clientEmail != null) {
             User user = userRepository.findByEmail(clientEmail)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
+
             client = clientRepository.findById(user.getId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client introuvable"));
+
         } else if (dto.getClientId() != null) {
+
             client = clientRepository.findById(dto.getClientId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucun Client !"));
         } else {
@@ -52,11 +62,15 @@ public class ReservationImpl implements ReservationService {
         }
 
         DemandeService demandeService = null;
+
         if (dto.getDemandeServiceId() != null) {
-            demandeService = demandeServiceRepository.findById(dto.getDemandeServiceId()).orElse(null);
+            demandeService = demandeServiceRepository
+                    .findById(dto.getDemandeServiceId())
+                    .orElse(null);
         }
 
         Reservation reservation = mapper.toEntity(dto);
+
         reservation.setArtisan(artisan);
         reservation.setClient(client);
         reservation.setDemandeService(demandeService);
@@ -66,20 +80,42 @@ public class ReservationImpl implements ReservationService {
         }
 
         if (reservation.getDateReservation() == null) {
-            reservation.setDateReservation(java.time.LocalDateTime.now());
+            reservation.setDateReservation(LocalDateTime.now());
         }
 
-        return mapper.toDto(repository.save(reservation));
+        Reservation savedReservation = repository.save(reservation);
+
+        if (artisan != null) {
+            userRepository.findById(artisan.getId()).ifPresent(u -> {
+
+                String clientName = reservation.getClient() != null
+                        ? reservation.getClient().getPrenom() + " " + reservation.getClient().getNom()
+                        : "Un client";
+
+                NotificationRequestDTO notification = new NotificationRequestDTO();
+                notification.setType(NotificationType.NOUVELLE_DEMANDE);
+                notification.setMessage("Nouvelle demande de réservation de " + clientName + ".");
+                notification.setDate(LocalDateTime.now());
+                notification.setReservationId(savedReservation.getId());
+
+                notificationService.createAndSend(notification, u);
+            });
+        }
+
+        return mapper.toDto(savedReservation);
     }
 
     @Override
     public ReservationResponseDTO updateReservationStatus(Long id, StatutReservation statut, String artisanEmail) {
+
         Reservation reservation = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Réservation introuvable"));
 
         if (artisanEmail != null) {
+
             User user = userRepository.findByEmail(artisanEmail)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
+
             Artisan artisan = artisanRepository.findById(user.getId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artisan introuvable"));
 
@@ -89,23 +125,113 @@ public class ReservationImpl implements ReservationService {
         }
 
         reservation.setStatutReservation(statut);
-        return mapper.toDto(repository.save(reservation));
+
+        Reservation savedReservation = repository.save(reservation);
+
+        if (reservation.getClient() != null) {
+            userRepository.findById(reservation.getClient().getId()).ifPresent(u -> {
+
+                if (statut == StatutReservation.ACCEPTEE) {
+
+                    NotificationRequestDTO notification = new NotificationRequestDTO();
+                    notification.setType(NotificationType.DEMANDE_ACCEPTEE);
+                    notification.setMessage(
+                            "Votre demande de réservation a été acceptée par l'artisan."
+                    );
+                    notification.setDate(LocalDateTime.now());
+                    notification.setReservationId(savedReservation.getId());
+
+                    notificationService.createAndSend(notification, u);
+
+                } else if (statut == StatutReservation.REFUSEE) {
+
+                    NotificationRequestDTO notification = new NotificationRequestDTO();
+                    notification.setType(NotificationType.DEMANDE_REFUSEE);
+                    notification.setMessage(
+                            "Votre demande de réservation a été refusée par l'artisan."
+                    );
+                    notification.setDate(LocalDateTime.now());
+                    notification.setReservationId(savedReservation.getId());
+
+                    notificationService.createAndSend(notification, u);
+                }
+            });
+        }
+
+        return mapper.toDto(savedReservation);
     }
 
     @Override
-    public ReservationResponseDTO findReservationById(Long id){
+    public ReservationResponseDTO accepterReservation(Long reservationId, String artisanEmail) {
+
+        Reservation reservation = repository.findById(reservationId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Réservation introuvable"));
+
+        if (reservation.getStatutReservation() != StatutReservation.EN_ATTENTE) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Seules les réservations EN_ATTENTE peuvent être acceptées");
+        }
+
+        if (artisanEmail == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Artisan non authentifié");
+        }
+
+        User user = userRepository.findByEmail(artisanEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
+
+        Artisan artisan = artisanRepository.findById(user.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artisan introuvable"));
+
+        if (!reservation.getArtisan().getId().equals(artisan.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cette réservation n'appartient pas à cet artisan");
+        }
+
+        return updateReservationStatus(reservationId, StatutReservation.ACCEPTEE, artisanEmail);
+    }
+
+    @Override
+    public ReservationResponseDTO refuserReservation(Long reservationId, String artisanEmail) {
+
+        Reservation reservation = repository.findById(reservationId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Réservation introuvable"));
+
+        if (reservation.getStatutReservation() != StatutReservation.EN_ATTENTE) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Seules les réservations EN_ATTENTE peuvent être refusées");
+        }
+
+        if (artisanEmail == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Artisan non authentifié");
+        }
+
+        User user = userRepository.findByEmail(artisanEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
+
+        Artisan artisan = artisanRepository.findById(user.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artisan introuvable"));
+
+        if (!reservation.getArtisan().getId().equals(artisan.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cette réservation n'appartient pas à cet artisan");
+        }
+
+        return updateReservationStatus(reservationId, StatutReservation.REFUSEE, artisanEmail);
+    }
+
+    @Override
+    public ReservationResponseDTO findReservationById(Long id) {
+
         Reservation reservation = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucune réservation !"));
+
         return mapper.toDto(reservation);
     }
 
     @Override
-    public Page<ReservationResponseDTO> findAllReservations(Pageable pageable){
+    public Page<ReservationResponseDTO> findAllReservations(Pageable pageable) {
         return repository.findAll(pageable).map(mapper::toDto);
     }
 
     @Override
-    public ReservationResponseDTO updateReservation(Long id, ReservationRequestDTO dto){
+    public ReservationResponseDTO updateReservation(Long id, ReservationRequestDTO dto) {
+
         Reservation reservation = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucune réservation !"));
 
@@ -113,10 +239,15 @@ public class ReservationImpl implements ReservationService {
 
         Artisan artisan = artisanRepository.findById(dto.getArtisanId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucun Artisan !"));
+
         Client client = clientRepository.findById(dto.getClientId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucun Client !"));
+
         DemandeService demandeService = (dto.getDemandeServiceId() != null)
-                ? demandeServiceRepository.findById(dto.getDemandeServiceId()).orElse(null) : null;
+                        ? demandeServiceRepository
+                        .findById(dto.getDemandeServiceId())
+                        .orElse(null)
+                        : null;
 
         reservation.setArtisan(artisan);
         reservation.setClient(client);
@@ -126,15 +257,15 @@ public class ReservationImpl implements ReservationService {
     }
 
     @Override
-    public Page<ReservationResponseDTO> findReservationsByClient(Long clientId, Pageable pageable){
+    public Page<ReservationResponseDTO> findReservationsByClient(Long clientId, Pageable pageable) {
         Page<Reservation> reservations = repository.findByClientId(clientId, pageable);
         return reservations.map(mapper::toDto);
     }
 
     @Override
-    public Page<ReservationResponseDTO> getPendingReservationsByArtisan(String email, Pageable pageable) {
-        User user = userRepository.findByEmail(email).orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
+    public Page<ReservationResponseDTO> getPendingReservationsByArtisan(String email,  Pageable pageable) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
 
         Artisan artisan = artisanRepository.findById(user.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artisan introuvable"));
@@ -145,35 +276,67 @@ public class ReservationImpl implements ReservationService {
     }
 
     @Override
-    public Page<ReservationResponseDTO> getLatestReservations(Pageable pageable){
+    public Page<ReservationResponseDTO> getInterventionsByArtisan(String email, Pageable pageable) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
+        Artisan artisan = artisanRepository.findById(user.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artisan introuvable"));
+        List<StatutReservation> statuses = List.of(StatutReservation.EN_COURS, StatutReservation.ACCEPTEE, StatutReservation.TERMINEE);
+        Page<Reservation> reservations = repository.findByArtisanIdAndStatutReservationIn(artisan.getId(), statuses, pageable);
+        return reservations.map(mapper::toDto);
+    }
+
+    @Override
+    public Page<ReservationResponseDTO> getLatestReservations(Pageable pageable) {
         return repository.findAllByOrderByDateReservationDesc(pageable).map(mapper::toDto);
     }
 
     @Override
-    public java.util.List<ReservationResponseDTO> getMyReservations(String email) {
+    public Page<ReservationResponseDTO> getMyReservations(String email, Pageable pageable) {
+
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
 
         Client client = clientRepository.findById(user.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client introuvable"));
 
-        java.util.List<Reservation> reservations = repository.findByClientIdOrderByDateReservationDesc(client.getId());
+        Page<Reservation> reservations = repository.findByClientIdOrderByDateReservationDesc(client.getId(), pageable);
 
-        return reservations.stream().map(mapper::toDto).collect(java.util.stream.Collectors.toList());
+        return reservations.map(mapper::toDto);
     }
 
     @Override
     public void cancelReservation(Long id) {
+
         Reservation reservation = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Réservation introuvable"));
 
         StatutReservation statut = reservation.getStatutReservation();
+
         if (statut != StatutReservation.EN_ATTENTE && statut != StatutReservation.ACCEPTEE) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cette réservation ne peut pas être annulée.");
         }
 
         reservation.setStatutReservation(StatutReservation.ANNULEE);
-        repository.save(reservation);
-    }
 
+        Reservation saved = repository.save(reservation);
+
+        if (reservation.getArtisan() != null) {
+
+            userRepository.findById(reservation.getArtisan().getId()).ifPresent(user -> {
+
+                String clientName = reservation.getClient() != null
+                        ? reservation.getClient().getPrenom() + " " + reservation.getClient().getNom()
+                        : "Un client";
+
+                NotificationRequestDTO notification = new NotificationRequestDTO();
+                notification.setType(NotificationType.RESERVATION_ANNULEE);
+                notification.setMessage(clientName + " a annulé la réservation.");
+                notification.setDate(LocalDateTime.now());
+                notification.setReservationId(saved.getId());
+
+                notificationService.createAndSend(notification, user);
+            });
+        }
+    }
 }

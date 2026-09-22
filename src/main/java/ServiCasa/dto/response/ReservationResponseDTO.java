@@ -45,5 +45,5 @@ public class ReservationResponseDTO {
 
     private Long demandeServiceId;
 
-    private Long paiementId;
+
 }

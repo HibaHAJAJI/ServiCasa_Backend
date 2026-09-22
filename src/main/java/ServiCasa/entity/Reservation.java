@@ -48,7 +48,6 @@ public class Reservation {
     @JoinColumn(name = "demande_service_id")
     private DemandeService demandeService;
 
-    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private Paiement paiement;
+
 
 }

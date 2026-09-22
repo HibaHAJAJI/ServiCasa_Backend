@@ -29,9 +29,9 @@ public class ReservationController {
     }
 
     @GetMapping("/client")
-    public List<ReservationResponseDTO> getMyReservations(Authentication authentication) {
+    public Page<ReservationResponseDTO> getMyReservations(Authentication authentication,Pageable pageable) {
         String email = authentication.getName();
-        return reservationService.getMyReservations(email);
+        return reservationService.getMyReservations(email,pageable);
     }
 
     @GetMapping("/artisan/demandes")
@@ -45,10 +45,16 @@ public class ReservationController {
         return reservationService.findReservationById(id);
     }
 
-    @PatchMapping("/{id}/statut")
-    public ReservationResponseDTO updateStatus(@PathVariable Long id, @RequestParam ServiCasa.enums.StatutReservation statut, Authentication authentication) {
+    @PatchMapping("/{id}/accepter")
+    public ReservationResponseDTO accepter(@PathVariable Long id, Authentication authentication) {
         String email = authentication != null ? authentication.getName() : null;
-        return reservationService.updateReservationStatus(id, statut, email);
+        return reservationService.accepterReservation(id, email);
+    }
+
+    @PatchMapping("/{id}/refuser")
+    public ReservationResponseDTO refuser(@PathVariable Long id, Authentication authentication) {
+        String email = authentication != null ? authentication.getName() : null;
+        return reservationService.refuserReservation(id, email);
     }
 
     @DeleteMapping("/{id}/annuler")
@@ -75,5 +81,11 @@ public class ReservationController {
     @GetMapping("/latest")
     public Page<ReservationResponseDTO> getLatestReservations(Pageable pageable) {
         return reservationService.getLatestReservations(pageable);
+    }
+
+    @GetMapping("/artisan/interventions")
+    public Page<ReservationResponseDTO> getInterventions(Pageable pageable, Authentication authentication) {
+        String email = authentication.getName();
+        return reservationService.getInterventionsByArtisan(email, pageable);
     }
 }
