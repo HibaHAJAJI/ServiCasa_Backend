@@ -57,6 +57,12 @@ public class ReservationController {
         return reservationService.refuserReservation(id, email);
     }
 
+    @PatchMapping("/{id}/terminer")
+    public ReservationResponseDTO terminer(@PathVariable Long id, Authentication authentication) {
+        String email = authentication != null ? authentication.getName() : null;
+        return reservationService.terminerReservation(id, email);
+    }
+
     @DeleteMapping("/{id}/annuler")
     public ResponseEntity<Void> cancelReservation(@PathVariable Long id) {
         reservationService.cancelReservation(id);

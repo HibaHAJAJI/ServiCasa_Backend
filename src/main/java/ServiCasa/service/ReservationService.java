@@ -26,6 +26,8 @@ public interface ReservationService {
 
     ReservationResponseDTO refuserReservation(Long reservationId, String artisanEmail);
 
+    ReservationResponseDTO terminerReservation(Long reservationId, String artisanEmail);
+
     Page<ReservationResponseDTO> findReservationsByClient(Long clientId, Pageable pageable);
 
     Page<ReservationResponseDTO> getPendingReservationsByArtisan(String email, Pageable pageable);

@@ -130,30 +130,39 @@ public class ReservationImpl implements ReservationService {
 
         if (reservation.getClient() != null) {
             userRepository.findById(reservation.getClient().getId()).ifPresent(u -> {
+                try {
+                    if (statut == StatutReservation.ACCEPTEE) {
+                        NotificationRequestDTO notification = new NotificationRequestDTO();
+                        notification.setType(NotificationType.DEMANDE_ACCEPTEE);
+                        notification.setMessage(
+                                "Votre demande de réservation a été acceptée par l'artisan."
+                        );
+                        notification.setDate(LocalDateTime.now());
+                        notification.setReservationId(savedReservation.getId());
+                        notificationService.createAndSend(notification, u);
 
-                if (statut == StatutReservation.ACCEPTEE) {
+                    } else if (statut == StatutReservation.REFUSEE) {
+                        NotificationRequestDTO notification = new NotificationRequestDTO();
+                        notification.setType(NotificationType.DEMANDE_REFUSEE);
+                        notification.setMessage(
+                                "Votre demande de réservation a été refusée par l'artisan."
+                        );
+                        notification.setDate(LocalDateTime.now());
+                        notification.setReservationId(savedReservation.getId());
+                        notificationService.createAndSend(notification, u);
 
-                    NotificationRequestDTO notification = new NotificationRequestDTO();
-                    notification.setType(NotificationType.DEMANDE_ACCEPTEE);
-                    notification.setMessage(
-                            "Votre demande de réservation a été acceptée par l'artisan."
-                    );
-                    notification.setDate(LocalDateTime.now());
-                    notification.setReservationId(savedReservation.getId());
-
-                    notificationService.createAndSend(notification, u);
-
-                } else if (statut == StatutReservation.REFUSEE) {
-
-                    NotificationRequestDTO notification = new NotificationRequestDTO();
-                    notification.setType(NotificationType.DEMANDE_REFUSEE);
-                    notification.setMessage(
-                            "Votre demande de réservation a été refusée par l'artisan."
-                    );
-                    notification.setDate(LocalDateTime.now());
-                    notification.setReservationId(savedReservation.getId());
-
-                    notificationService.createAndSend(notification, u);
+                    } else if (statut == StatutReservation.TERMINEE) {
+                        NotificationRequestDTO notification = new NotificationRequestDTO();
+                        notification.setType(NotificationType.INTERVENTION_TERMINEE);
+                        notification.setMessage(
+                                "L'intervention a été terminée par l'artisan. Vous pouvez maintenant donner un avis."
+                        );
+                        notification.setDate(LocalDateTime.now());
+                        notification.setReservationId(savedReservation.getId());
+                        notificationService.createAndSend(notification, u);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Erreur notification: " + e.getMessage());
                 }
             });
         }
@@ -213,6 +222,33 @@ public class ReservationImpl implements ReservationService {
         }
 
         return updateReservationStatus(reservationId, StatutReservation.REFUSEE, artisanEmail);
+    }
+
+    @Override
+    public ReservationResponseDTO terminerReservation(Long reservationId, String artisanEmail) {
+
+        Reservation reservation = repository.findById(reservationId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Réservation introuvable"));
+
+        if (reservation.getStatutReservation() != StatutReservation.ACCEPTEE && reservation.getStatutReservation() != StatutReservation.EN_COURS) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Seules les réservations ACCEPTEE ou EN_COURS peuvent être terminées");
+        }
+
+        if (artisanEmail == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Artisan non authentifié");
+        }
+
+        User user = userRepository.findByEmail(artisanEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
+
+        Artisan artisan = artisanRepository.findById(user.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artisan introuvable"));
+
+        if (!reservation.getArtisan().getId().equals(artisan.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cette réservation n'appartient pas à cet artisan");
+        }
+
+        return updateReservationStatus(reservationId, StatutReservation.TERMINEE, artisanEmail);
     }
 
     @Override
