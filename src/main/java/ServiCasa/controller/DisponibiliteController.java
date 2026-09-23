@@ -9,13 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/disponibilites")
 @RequiredArgsConstructor
 public class DisponibiliteController {
-
 
     private final DisponibiliteService disponibiliteService;
 
@@ -34,6 +33,11 @@ public class DisponibiliteController {
         return disponibiliteService.findAllDisponibilites(pageable);
     }
 
+    @GetMapping("/artisan/{artisanId}")
+    public Page<DisponibiliteResponseDTO> getDisponibilitesByArtisan(@PathVariable Long artisanId,Pageable pageable){
+        return disponibiliteService.findByArtisanId(artisanId,pageable);
+    }
+
     @GetMapping("/{id}")
     public DisponibiliteResponseDTO getDisponibiliteById(@PathVariable Long id){
         return disponibiliteService.findDisponibiliteById(id);
@@ -43,6 +47,4 @@ public class DisponibiliteController {
     public void deleteDisponibiliteById(@PathVariable Long id){
         disponibiliteService.deleteDisponibilite(id);
     }
-
-
 }

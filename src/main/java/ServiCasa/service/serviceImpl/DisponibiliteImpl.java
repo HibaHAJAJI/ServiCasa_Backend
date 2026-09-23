@@ -1,6 +1,5 @@
 package ServiCasa.service.serviceImpl;
 
-
 import ServiCasa.dto.request.DisponibiliteRequestDTO;
 import ServiCasa.dto.response.DisponibiliteResponseDTO;
 import ServiCasa.entity.Artisan;
@@ -16,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,59 +26,66 @@ public class DisponibiliteImpl implements DisponibiliteService {
     private final ArtisanRepository artisanRepository;
 
     @Override
-   public DisponibiliteResponseDTO addDisponibilite(DisponibiliteRequestDTO dto){
-       Artisan artisan= artisanRepository.findById(dto.getArtisanId())
-               .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "artisan introuvable!"));
+    public DisponibiliteResponseDTO addDisponibilite(DisponibiliteRequestDTO dto) {
+        Artisan artisan = artisanRepository.findById(dto.getArtisanId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "artisan introuvable!"));
 
-        Disponibilite disponibilite=mapper.toEntity(dto);
+        if (Boolean.TRUE.equals(dto.getDisponible())) {
+            if (dto.getHeureDebut() == null || dto.getHeureFin() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Les heures de début et de fin sont obligatoires quand le jour est disponible");
+            }
+            if (!dto.getHeureDebut().isBefore(dto.getHeureFin())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'heure de début doit être avant l'heure de fin");
+            }
+        }
+
+        Disponibilite disponibilite = mapper.toEntity(dto);
         disponibilite.setArtisan(artisan);
-               return mapper.toDto(repository.save(disponibilite));
-
+        return mapper.toDto(repository.save(disponibilite));
     }
 
     @Override
-    public Page<DisponibiliteResponseDTO> findAllDisponibilites(Pageable pageable){
-       return repository.findAll(pageable).map(mapper::toDto);
-
+    public Page<DisponibiliteResponseDTO> findAllDisponibilites(Pageable pageable) {
+        return repository.findAll(pageable).map(mapper::toDto);
     }
 
     @Override
-   public DisponibiliteResponseDTO findDisponibiliteById(Long id){
+    public DisponibiliteResponseDTO findDisponibiliteById(Long id) {
         Disponibilite disponibilite = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disponibilite introuvable !"));
         return mapper.toDto(disponibilite);
-   }
+    }
 
     @Override
-   public DisponibiliteResponseDTO findDisponibiliteByArtisan(Long artisanId){
-        Disponibilite disponibilite = repository.findByArtisanId(artisanId)
-                .stream().findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aucune disponibilite pour cet artisan !"));
-       return mapper.toDto(disponibilite);
+    public Page<DisponibiliteResponseDTO> findByArtisanId(Long artisanId, Pageable pageable) {
+        return repository.findByArtisanId(artisanId,pageable).map(mapper::toDto);
+    }
 
-   }
+    @Override
+    public DisponibiliteResponseDTO updateDisponibilite(DisponibiliteRequestDTO dto, Long id) {
+        Disponibilite disponibilite = repository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disponibilite introuvable !"));
 
-   @Override
-  public DisponibiliteResponseDTO updateDisponibilite(DisponibiliteRequestDTO dto, Long id){
-      Disponibilite disponibilite=repository.findById(id).orElseThrow(()
-              ->new ResponseStatusException(HttpStatus.NOT_FOUND, "Disponibilite introuvable !"));
+        if (Boolean.TRUE.equals(dto.getDisponible())) {
+            if (dto.getHeureDebut() == null || dto.getHeureFin() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Les heures de début et de fin sont obligatoires quand le jour est disponible");
+            }
+            if (!dto.getHeureDebut().isBefore(dto.getHeureFin())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'heure de début doit être avant l'heure de fin");
+            }
+        }
 
-      mapper.updateDisponibiliteDto(dto,disponibilite);
+        mapper.updateDisponibiliteDto(dto, disponibilite);
 
-      Disponibilite update=repository.save(disponibilite);
-      return mapper.toDto(update);
-  }
+        Disponibilite update = repository.save(disponibilite);
+        return mapper.toDto(update);
+    }
 
-  @Override
-   public void deleteDisponibilite(Long id){
-       if(!repository.existsById(id)){
-          throw  new ResponseStatusException(HttpStatus.NOT_FOUND, "Disponiblite introuvable !");
-       }
-       repository.deleteById(id);
-   }
+    @Override
+    public void deleteDisponibilite(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Disponibilite introuvable !");
+        }
+        repository.deleteById(id);
+    }
 }
-
-
-
-
-

@@ -6,16 +6,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DemandeServiceRequestDTO {
+public class ServiceArtisanRequestDTO {
 
-    @NotBlank(message = "Le nom est obligatoire")
+    @NotBlank(message = "Le nom du service est obligatoire")
     private String nom;
 
     private String description;
 
-    @NotNull(message = "La catégorie est obligatoire")
+    @NotNull(message = "Le tarif est obligatoire")
+    private BigDecimal tarif;
+
     private Long categorieId;
 }

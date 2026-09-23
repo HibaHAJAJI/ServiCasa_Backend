@@ -12,12 +12,10 @@ import org.mapstruct.MappingTarget;
 public interface DisponibiliteMapper {
 
      @Mapping(target = "id",ignore = true)
-     @Mapping(target = "disponible", source = "disponibilite")
      Disponibilite toEntity(DisponibiliteRequestDTO dto);
 
      DisponibiliteResponseDTO toDto(Disponibilite disponibilite);
 
      @Mapping(target = "id",ignore = true)
-     @Mapping(target = "disponible", source = "disponibilite")
      void updateDisponibiliteDto(DisponibiliteRequestDTO dto, @MappingTarget Disponibilite disponibilite);
 }

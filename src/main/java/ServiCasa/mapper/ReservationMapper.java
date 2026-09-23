@@ -22,7 +22,6 @@ public interface ReservationMapper {
      @Mapping(target = "artisanPrenom", source = "artisan.prenom")
      @Mapping(target = "artisanSpecialite", source = "artisan.specialite")
      @Mapping(target = "demandeServiceId", source = "demandeService.id")
- 
      ReservationResponseDTO toDto(Reservation reservation);
 
      @Mapping(target = "id",ignore = true)

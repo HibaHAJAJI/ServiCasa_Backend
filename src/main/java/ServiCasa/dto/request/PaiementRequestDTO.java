@@ -1,6 +1,5 @@
 package ServiCasa.dto.request;
 
-import ServiCasa.enums.StatutPaiement;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

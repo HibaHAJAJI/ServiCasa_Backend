@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 
 @RestController
@@ -19,11 +20,13 @@ public class DemandeServiceController {
     private final DemandeServiceService demandeServiceService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public DemandeServiceResponseDTO createDemandeService(@Valid  @RequestBody DemandeServiceRequestDTO dto){
         return demandeServiceService.addDemandeService(dto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public DemandeServiceResponseDTO updateDemandeService(@Valid @RequestBody DemandeServiceRequestDTO dto, @PathVariable Long id){
         return demandeServiceService.updateDemandeService(id,dto);
     }
@@ -40,6 +43,7 @@ public class DemandeServiceController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteDemandeServiceById(@PathVariable Long id){
         demandeServiceService.deleteDemandeService(id);
     }

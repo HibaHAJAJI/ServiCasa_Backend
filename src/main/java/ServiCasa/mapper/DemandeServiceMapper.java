@@ -15,6 +15,7 @@ public interface DemandeServiceMapper {
      DemandeService toEntity(DemandeServiceRequestDTO dto);
 
      @Mapping(target = "categorieId", source = "categorie.id")
+     @Mapping(target = "categorieNom", source = "categorie.nom")
      DemandeServiceResponseDTO toDto(DemandeService demandeService);
 
      @Mapping(target = "id",ignore = true)
