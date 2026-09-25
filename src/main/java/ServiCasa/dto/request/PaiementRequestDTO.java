@@ -1,21 +1,19 @@
 package ServiCasa.dto.request;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotNull;
+import ServiCasa.enums.ModePaiement;
+import ServiCasa.enums.StatutPaiement;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.math.BigDecimal;
-
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PaiementRequestDTO {
 
-    @NotNull(message = "Le montant est obligatoire")
-    @DecimalMin(value = "0.0", inclusive = false,
-            message = "Le montant doit être supérieur à 0")
-    private BigDecimal montant;
-
-
-    @NotNull(message = "La réservation est obligatoire")
     private Long reservationId;
+
+    private ModePaiement modePaiement;
+
+    private StatutPaiement statutPaiement;
 }

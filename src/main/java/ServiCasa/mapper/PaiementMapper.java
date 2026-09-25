@@ -12,10 +12,21 @@ import org.mapstruct.MappingTarget;
 public interface PaiementMapper {
 
      @Mapping(target = "id",ignore = true)
+     @Mapping(target = "reservation", ignore = true)
+     @Mapping(target = "montant", ignore = true)
+     @Mapping(target = "modePaiement", ignore = true)
+     @Mapping(target = "statutPaiement", ignore = true)
+     @Mapping(target = "datePaiement", ignore = true)
      Paiement toEntity(PaiementRequestDTO dto);
 
+     @Mapping(target = "reservationId", source = "reservation.id")
      PaiementResponseDTO toDto(Paiement paiement);
 
      @Mapping(target = "id",ignore = true)
+     @Mapping(target = "reservation", ignore = true)
+     @Mapping(target = "montant", ignore = true)
+     @Mapping(target = "modePaiement", ignore = true)
+     @Mapping(target = "statutPaiement", ignore = true)
+     @Mapping(target = "datePaiement", ignore = true)
      void updatePaiementDto(PaiementRequestDTO dto, @MappingTarget Paiement paiement);
 }

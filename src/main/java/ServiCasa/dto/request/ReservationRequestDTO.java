@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
@@ -28,6 +29,8 @@ public class ReservationRequestDTO {
     private Long artisanId;
 
     private Long demandeServiceId;
+
+    private BigDecimal prixTotal;
 
 
 }

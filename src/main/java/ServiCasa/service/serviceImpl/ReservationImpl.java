@@ -31,6 +31,7 @@ public class ReservationImpl implements ReservationService {
     private final ClientRepository clientRepository;
     private final ArtisanRepository artisanRepository;
     private final DemandeServiceRepository demandeServiceRepository;
+    private final PaiementRepository paiementRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
@@ -74,6 +75,16 @@ public class ReservationImpl implements ReservationService {
         reservation.setArtisan(artisan);
         reservation.setClient(client);
         reservation.setDemandeService(demandeService);
+
+        if (reservation.getPrixTotal() == null) {
+            if (dto.getPrixTotal() != null) {
+                reservation.setPrixTotal(dto.getPrixTotal());
+            } else if (artisan.getTarifHoraire() != null) {
+                reservation.setPrixTotal(artisan.getTarifHoraire());
+            } else {
+                reservation.setPrixTotal(java.math.BigDecimal.valueOf(250));
+            }
+        }
 
         if (reservation.getStatutReservation() == null) {
             reservation.setStatutReservation(StatutReservation.EN_ATTENTE);
@@ -130,39 +141,42 @@ public class ReservationImpl implements ReservationService {
 
         if (reservation.getClient() != null) {
             userRepository.findById(reservation.getClient().getId()).ifPresent(u -> {
-                try {
-                    if (statut == StatutReservation.ACCEPTEE) {
-                        NotificationRequestDTO notification = new NotificationRequestDTO();
-                        notification.setType(NotificationType.DEMANDE_ACCEPTEE);
-                        notification.setMessage(
-                                "Votre demande de réservation a été acceptée par l'artisan."
-                        );
-                        notification.setDate(LocalDateTime.now());
-                        notification.setReservationId(savedReservation.getId());
-                        notificationService.createAndSend(notification, u);
 
-                    } else if (statut == StatutReservation.REFUSEE) {
-                        NotificationRequestDTO notification = new NotificationRequestDTO();
-                        notification.setType(NotificationType.DEMANDE_REFUSEE);
-                        notification.setMessage(
-                                "Votre demande de réservation a été refusée par l'artisan."
-                        );
-                        notification.setDate(LocalDateTime.now());
-                        notification.setReservationId(savedReservation.getId());
-                        notificationService.createAndSend(notification, u);
+                if (statut == StatutReservation.ACCEPTEE) {
 
-                    } else if (statut == StatutReservation.TERMINEE) {
-                        NotificationRequestDTO notification = new NotificationRequestDTO();
-                        notification.setType(NotificationType.INTERVENTION_TERMINEE);
-                        notification.setMessage(
-                                "L'intervention a été terminée par l'artisan. Vous pouvez maintenant donner un avis."
-                        );
-                        notification.setDate(LocalDateTime.now());
-                        notification.setReservationId(savedReservation.getId());
-                        notificationService.createAndSend(notification, u);
-                    }
-                } catch (Exception e) {
-                    System.err.println("Erreur notification: " + e.getMessage());
+                    NotificationRequestDTO notification = new NotificationRequestDTO();
+                    notification.setType(NotificationType.DEMANDE_ACCEPTEE);
+                    notification.setMessage(
+                            "Votre demande de réservation a été acceptée par l'artisan."
+                    );
+                    notification.setDate(LocalDateTime.now());
+                    notification.setReservationId(savedReservation.getId());
+
+                    notificationService.createAndSend(notification, u);
+
+                } else if (statut == StatutReservation.REFUSEE) {
+
+                    NotificationRequestDTO notification = new NotificationRequestDTO();
+                    notification.setType(NotificationType.DEMANDE_REFUSEE);
+                    notification.setMessage(
+                            "Votre demande de réservation a été refusée par l'artisan."
+                    );
+                    notification.setDate(LocalDateTime.now());
+                    notification.setReservationId(savedReservation.getId());
+
+                    notificationService.createAndSend(notification, u);
+
+                } else if (statut == StatutReservation.TERMINEE) {
+
+                    NotificationRequestDTO notification = new NotificationRequestDTO();
+                    notification.setType(NotificationType.INTERVENTION_TERMINEE);
+                    notification.setMessage(
+                            "L'intervention a été terminée par l'artisan. Vous pouvez maintenant donner un avis."
+                    );
+                    notification.setDate(LocalDateTime.now());
+                    notification.setReservationId(savedReservation.getId());
+
+                    notificationService.createAndSend(notification, u);
                 }
             });
         }

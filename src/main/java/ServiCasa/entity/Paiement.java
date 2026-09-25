@@ -1,5 +1,6 @@
 package ServiCasa.entity;
 
+import ServiCasa.enums.ModePaiement;
 import ServiCasa.enums.StatutPaiement;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -25,7 +27,12 @@ public class Paiement {
     private BigDecimal montant;
 
     @Enumerated(EnumType.STRING)
+    private ModePaiement modePaiement;
+
+    @Enumerated(EnumType.STRING)
     private StatutPaiement statutPaiement;
+
+    private LocalDateTime datePaiement;
 
     @OneToOne()
     @JoinColumn(name = "reservation_id", unique = true)
