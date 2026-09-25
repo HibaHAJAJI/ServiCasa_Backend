@@ -3,15 +3,15 @@ package ServiCasa.dto.request;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 
 @Data
 public class DisponibiliteRequestDTO {
 
-    @NotNull(message = "Le jour est obligatoire")
-    private DayOfWeek jour;
+    @NotNull(message = "La date est obligatoire")
+    private LocalDate date;
 
     private LocalTime heureDebut;
 

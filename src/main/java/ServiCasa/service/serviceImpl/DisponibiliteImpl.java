@@ -15,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class DisponibiliteImpl implements DisponibiliteService {
 
         if (Boolean.TRUE.equals(dto.getDisponible())) {
             if (dto.getHeureDebut() == null || dto.getHeureFin() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Les heures de début et de fin sont obligatoires quand le jour est disponible");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Les heures de début et de fin sont obligatoires quand la date est disponible");
             }
             if (!dto.getHeureDebut().isBefore(dto.getHeureFin())) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'heure de début doit être avant l'heure de fin");
@@ -62,13 +64,20 @@ public class DisponibiliteImpl implements DisponibiliteService {
     }
 
     @Override
+    public List<DisponibiliteResponseDTO> findByArtisanIdAndDate(Long artisanId, LocalDate date) {
+        return repository.findByArtisanIdAndDateAndDisponibleIsTrue(artisanId, date).stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public DisponibiliteResponseDTO updateDisponibilite(DisponibiliteRequestDTO dto, Long id) {
         Disponibilite disponibilite = repository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Disponibilite introuvable !"));
 
         if (Boolean.TRUE.equals(dto.getDisponible())) {
             if (dto.getHeureDebut() == null || dto.getHeureFin() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Les heures de début et de fin sont obligatoires quand le jour est disponible");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Les heures de début et de fin sont obligatoires quand la date est disponible");
             }
             if (!dto.getHeureDebut().isBefore(dto.getHeureFin())) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'heure de début doit être avant l'heure de fin");

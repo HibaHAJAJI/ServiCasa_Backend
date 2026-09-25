@@ -54,6 +54,13 @@ public class PaiementServiceImpl implements PaiementService {
 
     @Override
     public PaiementResponseDTO createPaiement(PaiementRequestDTO dto, String email) {
+        if (dto.getReservationId() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "reservationId est obligatoire");
+        }
+        if (dto.getModePaiement() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mode de paiement invalide");
+        }
+
         Reservation reservation = reservationRepository.findById(dto.getReservationId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Réservation introuvable"));
 
@@ -64,6 +71,7 @@ public class PaiementServiceImpl implements PaiementService {
         if (reservation.getPrixTotal() == null) {
             if (reservation.getArtisan() != null && reservation.getArtisan().getTarifHoraire() != null) {
                 reservation.setPrixTotal(reservation.getArtisan().getTarifHoraire());
+                reservationRepository.save(reservation);
             } else {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Prix total non défini pour cette réservation");
             }
@@ -74,26 +82,22 @@ public class PaiementServiceImpl implements PaiementService {
         paiement.setMontant(reservation.getPrixTotal());
         paiement.setModePaiement(dto.getModePaiement());
         paiement.setDatePaiement(LocalDateTime.now());
-
-        boolean success = true;
-
-        if (success) {
-            paiement.setStatutPaiement(StatutPaiement.PAYE);
-        } else {
-            paiement.setStatutPaiement(StatutPaiement.ECHOUE);
-        }
+        paiement.setStatutPaiement(StatutPaiement.PAYE);
 
         Paiement saved = paiementRepository.save(paiement);
 
-        if (saved.getStatutPaiement() == StatutPaiement.PAYE && reservation.getClient() != null) {
-            userRepository.findById(reservation.getClient().getId()).ifPresent(user -> {
-                NotificationRequestDTO notification = new NotificationRequestDTO();
-                notification.setType(NotificationType.PAIEMENT_CONFIRME);
-                notification.setMessage("Votre paiement de " + saved.getMontant() + " DH a été confirmé.");
-                notification.setDate(LocalDateTime.now());
-                notification.setReservationId(reservation.getId());
-                notificationService.createAndSend(notification, user);
-            });
+        try {
+            if (saved.getStatutPaiement() == StatutPaiement.PAYE && reservation.getClient() != null) {
+                userRepository.findById(reservation.getClient().getId()).ifPresent(user -> {
+                    NotificationRequestDTO notification = new NotificationRequestDTO();
+                    notification.setType(NotificationType.PAIEMENT_CONFIRME);
+                    notification.setMessage("Votre paiement de " + saved.getMontant() + " DH a été confirmé.");
+                    notification.setDate(LocalDateTime.now());
+                    notification.setReservationId(reservation.getId());
+                    notificationService.createAndSend(notification, user);
+                });
+            }
+        } catch (Exception ignored) {
         }
 
         return paiementMapper.toDto(saved);

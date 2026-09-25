@@ -3,6 +3,7 @@ package ServiCasa.service.serviceImpl;
 import ServiCasa.dto.request.ReservationRequestDTO;
 import ServiCasa.dto.response.ReservationResponseDTO;
 import ServiCasa.entity.*;
+import ServiCasa.enums.StatutPaiement;
 import ServiCasa.enums.StatutReservation;
 import ServiCasa.mapper.ReservationMapper;
 import ServiCasa.repository.*;
@@ -20,7 +21,11 @@ import ServiCasa.notification.dto.NotificationRequestDTO;
 import ServiCasa.notification.enums.NotificationType;
 import ServiCasa.notification.service.NotificationService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +39,7 @@ public class ReservationImpl implements ReservationService {
     private final PaiementRepository paiementRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final DisponibiliteRepository disponibiliteRepository;
 
     @Override
     public ReservationResponseDTO addReservation(ReservationRequestDTO dto) {
@@ -185,6 +191,7 @@ public class ReservationImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public ReservationResponseDTO accepterReservation(Long reservationId, String artisanEmail) {
 
         Reservation reservation = repository.findById(reservationId)
@@ -192,6 +199,10 @@ public class ReservationImpl implements ReservationService {
 
         if (reservation.getStatutReservation() != StatutReservation.EN_ATTENTE) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Seules les réservations EN_ATTENTE peuvent être acceptées");
+        }
+
+        if (reservation.getDateIntervention() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La date d'intervention est obligatoire");
         }
 
         if (artisanEmail == null) {
@@ -208,7 +219,96 @@ public class ReservationImpl implements ReservationService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cette réservation n'appartient pas à cet artisan");
         }
 
-        return updateReservationStatus(reservationId, StatutReservation.ACCEPTEE, artisanEmail);
+        LocalDateTime newStart = reservation.getDateIntervention();
+        LocalDateTime newEnd = newStart.plusHours(1);
+
+        List<Reservation> existantes = repository.findByArtisanIdAndStatutReservationIn(
+                artisan.getId(), List.of(StatutReservation.ACCEPTEE, StatutReservation.EN_COURS));
+
+        boolean chevauchement = existantes.stream()
+                .filter(r -> !r.getId().equals(reservationId))
+                .filter(r -> r.getDateIntervention() != null)
+                .anyMatch(r -> {
+                    LocalDateTime existStart = r.getDateIntervention();
+                    LocalDateTime existEnd = existStart.plusHours(1);
+                    return newStart.isBefore(existEnd) && newEnd.isAfter(existStart);
+                });
+
+        if (chevauchement) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'artisan est déjà indisponible pour cette heure.");
+        }
+
+        reservation.setStatutReservation(StatutReservation.ACCEPTEE);
+        Reservation savedReservation = repository.save(reservation);
+
+        LocalDate reservationDate = newStart.toLocalDate();
+        LocalTime reservationStart = newStart.toLocalTime();
+        LocalTime reservationEnd = newEnd.toLocalTime();
+
+        List<Disponibilite> existingSlots = disponibiliteRepository.findByArtisanIdAndDateAndDisponibleIsTrue(artisan.getId(), reservationDate);
+
+        if (!existingSlots.isEmpty()) {
+            for (Disponibilite slot : existingSlots) {
+                LocalTime slotStart = slot.getHeureDebut();
+                LocalTime slotEnd = slot.getHeureFin();
+                if (!reservationStart.isBefore(slotStart) && !reservationEnd.isAfter(slotEnd)) {
+                    if (reservationStart.isAfter(slotStart)) {
+                        slot.setHeureFin(reservationStart);
+                        disponibiliteRepository.save(slot);
+                    }
+                    Disponibilite blocked = new Disponibilite();
+                    blocked.setArtisan(artisan);
+                    blocked.setDate(reservationDate);
+                    blocked.setHeureDebut(reservationStart);
+                    blocked.setHeureFin(reservationEnd);
+                    blocked.setDisponible(false);
+                    disponibiliteRepository.save(blocked);
+                    if (reservationEnd.isBefore(slotEnd)) {
+                        Disponibilite remaining = new Disponibilite();
+                        remaining.setArtisan(artisan);
+                        remaining.setDate(reservationDate);
+                        remaining.setHeureDebut(reservationEnd);
+                        remaining.setHeureFin(slotEnd);
+                        remaining.setDisponible(true);
+                        disponibiliteRepository.save(remaining);
+                    }
+                } else if (!reservationStart.isBefore(slotStart) && reservationEnd.isAfter(slotEnd)) {
+                    slot.setHeureFin(reservationStart);
+                    disponibiliteRepository.save(slot);
+                    Disponibilite blocked = new Disponibilite();
+                    blocked.setArtisan(artisan);
+                    blocked.setDate(reservationDate);
+                    blocked.setHeureDebut(reservationStart);
+                    blocked.setHeureFin(reservationEnd);
+                    blocked.setDisponible(false);
+                    disponibiliteRepository.save(blocked);
+                }
+            }
+        } else {
+            try {
+                Disponibilite bloc = new Disponibilite();
+                bloc.setArtisan(artisan);
+                bloc.setDate(reservationDate);
+                bloc.setHeureDebut(reservationStart);
+                bloc.setHeureFin(reservationEnd);
+                bloc.setDisponible(false);
+                disponibiliteRepository.save(bloc);
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (savedReservation.getClient() != null) {
+            userRepository.findById(savedReservation.getClient().getId()).ifPresent(u -> {
+                NotificationRequestDTO notification = new NotificationRequestDTO();
+                notification.setType(NotificationType.DEMANDE_ACCEPTEE);
+                notification.setMessage("Votre demande de réservation a été acceptée par l'artisan.");
+                notification.setDate(LocalDateTime.now());
+                notification.setReservationId(savedReservation.getId());
+                notificationService.createAndSend(notification, u);
+            });
+        }
+
+        return mapper.toDto(savedReservation);
     }
 
     @Override
@@ -355,16 +455,23 @@ public class ReservationImpl implements ReservationService {
         return reservations.map(mapper::toDto);
     }
 
+
     @Override
+    @Transactional
     public void cancelReservation(Long id) {
 
         Reservation reservation = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Réservation introuvable"));
 
-        StatutReservation statut = reservation.getStatutReservation();
+        if (reservation.getStatutReservation() != StatutReservation.EN_ATTENTE) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Seules les réservations EN_ATTENTE peuvent être annulées.");
+        }
 
-        if (statut != StatutReservation.EN_ATTENTE && statut != StatutReservation.ACCEPTEE) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cette réservation ne peut pas être annulée.");
+        Paiement paiement = paiementRepository.findByReservation(reservation)
+                .orElse(null);
+
+        if (paiement != null && paiement.getStatutPaiement() == StatutPaiement.PAYE) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cette réservation a déjà été payée et ne peut pas être annulée.");
         }
 
         reservation.setStatutReservation(StatutReservation.ANNULEE);

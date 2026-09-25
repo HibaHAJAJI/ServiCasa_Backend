@@ -38,7 +38,7 @@ CREATE TABLE demande_services (
 
 CREATE TABLE disponibilites (
                                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                jour VARCHAR(50),
+                                date DATE,
                                 heure_debut TIME,
                                 heure_fin TIME,
                                 disponible BOOLEAN DEFAULT TRUE,

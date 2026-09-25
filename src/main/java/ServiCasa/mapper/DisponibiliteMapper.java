@@ -14,6 +14,7 @@ public interface DisponibiliteMapper {
      @Mapping(target = "id",ignore = true)
      Disponibilite toEntity(DisponibiliteRequestDTO dto);
 
+     @Mapping(target = "artisanId", source = "artisan.id")
      DisponibiliteResponseDTO toDto(Disponibilite disponibilite);
 
      @Mapping(target = "id",ignore = true)
