@@ -31,9 +31,19 @@ public class ReservationResponseDTO {
 
     private Long clientId;
 
+    private String clientNom;
+
+    private String clientPrenom;
+
     private Long artisanId;
+
+    private String artisanNom;
+
+    private String artisanPrenom;
+
+    private String artisanSpecialite;
 
     private Long demandeServiceId;
 
-    private Long paiementId;
+
 }

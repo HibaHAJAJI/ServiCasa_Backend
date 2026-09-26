@@ -2,11 +2,14 @@ package ServiCasa.controller;
 
 import ServiCasa.dto.request.ClientRequestDTO;
 import ServiCasa.dto.response.ClientResponseDTO;
+import ServiCasa.dto.updateDto.ClientUpdateRequestDTO;
 import ServiCasa.service.ClientService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/clients")
@@ -15,18 +18,18 @@ public class ClientController {
     private final ClientService clientService;
 
     @PostMapping
-    public ClientResponseDTO createClient(@RequestBody ClientRequestDTO dto){
+    public ClientResponseDTO createClient(@Valid @RequestBody ClientRequestDTO dto){
         return clientService.addClient(dto);
     }
 
     @PutMapping("/{id}")
-    public ClientResponseDTO updateClient(@RequestBody ClientRequestDTO dto,@PathVariable Long id){
+    public ClientResponseDTO updateClient(@Valid @RequestBody ClientUpdateRequestDTO dto, @PathVariable Long id){
         return clientService.updateClient(dto,id);
     }
 
     @GetMapping
-    public List<ClientResponseDTO> getAllClients(){
-        return clientService.findAllClients();
+    public Page<ClientResponseDTO> getAllClients(Pageable pageable){
+        return clientService.findAllClients(pageable);
     }
 
     @GetMapping("/{id}")

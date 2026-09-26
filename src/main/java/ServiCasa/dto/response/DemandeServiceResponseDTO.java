@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class DemandeServiceResponseDTO {
-
 
     private Long id;
 
@@ -17,7 +15,7 @@ public class DemandeServiceResponseDTO {
 
     private String description;
 
-
     private Long categorieId;
 
+    private String categorieNom;
 }

@@ -1,0 +1,2 @@
+ALTER TABLE artisans
+    ADD COLUMN statut_compte VARCHAR(50) NOT NULL DEFAULT 'EN_ATTENTE';

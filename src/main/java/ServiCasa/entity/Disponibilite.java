@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.DayOfWeek;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 
@@ -22,11 +24,13 @@ public class Disponibilite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private DayOfWeek jour;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
 
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime heureDebut;
 
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime heureFin;
 
     private Boolean disponible;

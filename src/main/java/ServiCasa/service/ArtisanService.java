@@ -3,8 +3,13 @@ package ServiCasa.service;
 
 import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.response.ArtisanResponseDTO;
+import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+
+
 
 public interface ArtisanService {
 
@@ -12,9 +17,16 @@ public interface ArtisanService {
 
     ArtisanResponseDTO findArtisanById(Long id);
 
-    List<ArtisanResponseDTO> findAllArtisans();
+    Page<ArtisanResponseDTO> findAllArtisans(Pageable pageable);
 
-    ArtisanResponseDTO updateArtisan(Long id, ArtisanRequestDTO dto);
+    ArtisanResponseDTO updateArtisan(Long id, ArtisanUpdateRequestDTO dto);
 
     void deleteArtisan(Long id);
+
+    Page<ArtisanResponseDTO> findBySpecialiteArtisan(String specialite, Pageable pageable);
+
+    Page<ArtisanResponseDTO> findByVilleArtisan(String ville, Pageable pageable);
+
+    List<String> findAllVilles();
+
 }

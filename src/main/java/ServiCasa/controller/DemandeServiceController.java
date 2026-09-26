@@ -3,10 +3,13 @@ package ServiCasa.controller;
 import ServiCasa.dto.request.DemandeServiceRequestDTO;
 import ServiCasa.dto.response.DemandeServiceResponseDTO;
 import ServiCasa.service.DemandeServiceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/demandeservices")
@@ -17,18 +20,20 @@ public class DemandeServiceController {
     private final DemandeServiceService demandeServiceService;
 
     @PostMapping
-    public DemandeServiceResponseDTO createDemandeService(@RequestBody DemandeServiceRequestDTO dto){
+    @PreAuthorize("hasRole('ADMIN')")
+    public DemandeServiceResponseDTO createDemandeService(@Valid  @RequestBody DemandeServiceRequestDTO dto){
         return demandeServiceService.addDemandeService(dto);
     }
 
     @PutMapping("/{id}")
-    public DemandeServiceResponseDTO updateDemandeService(@RequestBody DemandeServiceRequestDTO dto, @PathVariable Long id){
+    @PreAuthorize("hasRole('ADMIN')")
+    public DemandeServiceResponseDTO updateDemandeService(@Valid @RequestBody DemandeServiceRequestDTO dto, @PathVariable Long id){
         return demandeServiceService.updateDemandeService(id,dto);
     }
 
     @GetMapping
-    public List<DemandeServiceResponseDTO> getAllDemandeServices(){
-        return demandeServiceService.findAllDemandeServices();
+    public Page<DemandeServiceResponseDTO> getAllDemandeServices(Pageable pageable){
+        return demandeServiceService.findAllDemandeServices(pageable);
     }
 
 
@@ -38,6 +43,7 @@ public class DemandeServiceController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteDemandeServiceById(@PathVariable Long id){
         demandeServiceService.deleteDemandeService(id);
     }

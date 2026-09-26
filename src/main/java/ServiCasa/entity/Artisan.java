@@ -1,5 +1,7 @@
 package ServiCasa.entity;
 
+import ServiCasa.enums.StatutCompte;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,8 +18,6 @@ import java.util.List;
 @PrimaryKeyJoinColumn(name = "id")
 public class Artisan extends User {
 
-    private String specialite;
-
     private Integer anneesExperience;
 
     private BigDecimal tarifHoraire;
@@ -26,12 +26,27 @@ public class Artisan extends User {
 
     private String zoneIntervention;
 
+    @Enumerated(EnumType.STRING)
+    private StatutCompte statutCompte;
+
     @OneToMany(mappedBy = "artisan",cascade = CascadeType.ALL)
-    @ToString.Exclude
+    @JsonIgnore
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "artisan", cascade = CascadeType.ALL)
-    @ToString.Exclude
+    @JsonIgnore
     private List<Disponibilite> disponibilites;
+
+    @OneToMany(mappedBy = "artisan", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Avis> avis;
+
+    @OneToMany(mappedBy = "artisan", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ServiceArtisan> services;
+
+    @ManyToOne
+    @JoinColumn(name = "specialite_id")
+    private Specialite specialite;
 
 }

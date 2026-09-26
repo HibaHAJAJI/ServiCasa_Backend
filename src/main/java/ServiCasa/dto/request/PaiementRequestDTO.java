@@ -1,17 +1,19 @@
 package ServiCasa.dto.request;
 
+import ServiCasa.enums.ModePaiement;
 import ServiCasa.enums.StatutPaiement;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.math.BigDecimal;
-
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PaiementRequestDTO {
 
-    private BigDecimal montant;
+    private Long reservationId;
+
+    private ModePaiement modePaiement;
 
     private StatutPaiement statutPaiement;
-
-    private Long reservationId;
 }

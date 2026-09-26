@@ -1,12 +1,16 @@
 package ServiCasa.repository;
 
 import ServiCasa.entity.Disponibilite;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
+import java.time.LocalDate;
+import java.util.List;
 
 public interface DisponibiliteRepository extends JpaRepository<Disponibilite,Long> {
 
-    Optional<Disponibilite> findByArtisanId(Long artisanId);
+    Page<Disponibilite> findByArtisanId(Long artisanId, Pageable pageable);
+
+    List<Disponibilite> findByArtisanIdAndDateAndDisponibleIsTrue(Long artisanId, LocalDate date);
 }

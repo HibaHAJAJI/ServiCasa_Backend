@@ -7,7 +7,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface DemandeServiceMapper {
@@ -15,9 +14,9 @@ public interface DemandeServiceMapper {
      @Mapping(target = "id",ignore = true)
      DemandeService toEntity(DemandeServiceRequestDTO dto);
 
+     @Mapping(target = "categorieId", source = "categorie.id")
+     @Mapping(target = "categorieNom", source = "categorie.nom")
      DemandeServiceResponseDTO toDto(DemandeService demandeService);
-
-     List<DemandeServiceResponseDTO> toDtoList(List<DemandeService>demandeServices);
 
      @Mapping(target = "id",ignore = true)
      void updateDemandeServiceDto(DemandeServiceRequestDTO dto, @MappingTarget DemandeService demandeService);

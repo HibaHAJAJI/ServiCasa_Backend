@@ -1,48 +1,56 @@
 package ServiCasa.controller;
 
-import ServiCasa.dto.request.ClientRequestDTO;
 import ServiCasa.dto.request.DisponibiliteRequestDTO;
-import ServiCasa.dto.response.ClientResponseDTO;
 import ServiCasa.dto.response.DisponibiliteResponseDTO;
 import ServiCasa.service.DisponibiliteService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/disponibilites")
 @RequiredArgsConstructor
 public class DisponibiliteController {
 
-
     private final DisponibiliteService disponibiliteService;
 
     @PostMapping
-    public DisponibiliteResponseDTO createDisponibilite(@RequestBody DisponibiliteRequestDTO dto){
+    public DisponibiliteResponseDTO createDisponibilite(@Valid @RequestBody DisponibiliteRequestDTO dto){
         return disponibiliteService.addDisponibilite(dto);
     }
 
     @PutMapping("/{id}")
-    public DisponibiliteResponseDTO updateDisponibilite(@RequestBody DisponibiliteRequestDTO dto, @PathVariable Long id){
+    public DisponibiliteResponseDTO updateDisponibilite(@Valid @RequestBody DisponibiliteRequestDTO dto, @PathVariable Long id){
         return disponibiliteService.updateDisponibilite(dto,id);
     }
 
     @GetMapping
-    public List<DisponibiliteResponseDTO> getAllDisponibilites(){
-        return disponibiliteService.findAllDisponibilites();
+    public Page<DisponibiliteResponseDTO> getAllDisponibilites(Pageable pageable){
+        return disponibiliteService.findAllDisponibilites(pageable);
+    }
+
+    @GetMapping("/artisan/{artisanId}")
+    public Page<DisponibiliteResponseDTO> getDisponibilitesByArtisan(@PathVariable Long artisanId,Pageable pageable){
+        return disponibiliteService.findByArtisanId(artisanId,pageable);
+    }
+
+    @GetMapping("/artisan/{artisanId}/date/{date}")
+    public List<DisponibiliteResponseDTO> getDisponibilitesByArtisanAndDate(@PathVariable Long artisanId, @PathVariable LocalDate date){
+        return disponibiliteService.findByArtisanIdAndDate(artisanId, date);
     }
 
     @GetMapping("/{id}")
-    public DisponibiliteResponseDTO getDisponibiliteByArtisan(@PathVariable Long id){
-        return disponibiliteService.findDisponibiliteByArtisan(id);
+    public DisponibiliteResponseDTO getDisponibiliteById(@PathVariable Long id){
+        return disponibiliteService.findDisponibiliteById(id);
     }
 
     @DeleteMapping("/{id}")
     public void deleteDisponibiliteById(@PathVariable Long id){
         disponibiliteService.deleteDisponibilite(id);
     }
-
-
 }

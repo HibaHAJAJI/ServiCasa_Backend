@@ -1,5 +1,6 @@
 package ServiCasa.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,11 @@ public class Client extends User {
     private String adresse;
 
     @OneToMany(mappedBy = "client",cascade = CascadeType.ALL)
-    @ToString.Exclude
+    @JsonIgnore
     private List<Reservation> reservations;
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Avis> avis;
 
 }

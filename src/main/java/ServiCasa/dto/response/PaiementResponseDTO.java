@@ -1,12 +1,13 @@
 package ServiCasa.dto.response;
 
+import ServiCasa.enums.ModePaiement;
 import ServiCasa.enums.StatutPaiement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +18,11 @@ public class PaiementResponseDTO {
 
     private BigDecimal montant;
 
+    private ModePaiement modePaiement;
+
     private StatutPaiement statutPaiement;
+
+    private LocalDateTime datePaiement;
 
     private Long reservationId;
 }

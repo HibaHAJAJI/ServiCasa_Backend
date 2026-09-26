@@ -1,4 +1,5 @@
 package ServiCasa.entity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import ServiCasa.enums.Role;
@@ -28,15 +29,18 @@ public class User implements UserDetails {
 
     private String telephone;
 
-    private String ville;
-
     @Column(unique = true)
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @ManyToOne
+    @JoinColumn(name = "ville_id")
+    private Ville ville;
 
 
     @Override
