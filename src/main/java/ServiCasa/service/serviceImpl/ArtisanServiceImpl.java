@@ -19,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -84,15 +86,20 @@ public class ArtisanServiceImpl implements ArtisanService {
 
    @Override
     public Page<ArtisanResponseDTO> findBySpecialiteArtisan(String specialite, Pageable pageable) {
-       Page<Artisan> artisans = repository.findBySpecialite(specialite, pageable);
+       Page<Artisan> artisans = repository.findBySpecialiteNom(specialite, pageable);
        return artisans.map(this::mapToDtoWithAvis);
    }
 
     @Override
     public Page<ArtisanResponseDTO>  findByVilleArtisan(String ville, Pageable pageable){
-        Page<Artisan>artisans=repository.findByVille(ville,pageable);
+        Page<Artisan>artisans=repository.findByVilleNom(ville,pageable);
         return artisans.map(this::mapToDtoWithAvis);
        }
+
+   @Override
+   public List<String> findAllVilles(){
+       return repository.findAllVilles();
+   }
 
    private ArtisanResponseDTO mapToDtoWithAvis(Artisan artisan) {
        ArtisanResponseDTO dto = mapper.toDto(artisan);

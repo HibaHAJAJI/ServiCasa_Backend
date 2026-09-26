@@ -3,6 +3,7 @@ package ServiCasa.mapper;
 import ServiCasa.dto.request.ReservationRequestDTO;
 import ServiCasa.dto.response.ReservationResponseDTO;
 import ServiCasa.entity.Reservation;
+import ServiCasa.entity.Specialite;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -10,6 +11,10 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
+
+     default String toSpecialiteNom(Specialite specialite) {
+          return specialite == null ? null : specialite.getNom();
+     }
 
      @Mapping(target = "id",ignore = true)
      Reservation toEntity(ReservationRequestDTO dto);

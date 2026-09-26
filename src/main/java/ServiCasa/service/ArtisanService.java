@@ -7,6 +7,8 @@ import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 
 
 public interface ArtisanService {
@@ -25,5 +27,6 @@ public interface ArtisanService {
 
     Page<ArtisanResponseDTO> findByVilleArtisan(String ville, Pageable pageable);
 
+    List<String> findAllVilles();
 
 }

@@ -12,16 +12,16 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper {
+public abstract class UserMapper extends ReferenceMapper {
 
-    User toEntity(UserRegisterRequest dto);
+    public abstract User toEntity(UserRegisterRequest dto);
 
-    UserResponse toDto(User user);
+    public abstract UserResponse toDto(User user);
 
     @Mapping(target = "id",ignore = true)
     @Mapping(target = "password",ignore = true)
     @Mapping(target = "email",ignore = true)
     @Mapping(target = "role",ignore = true)
-    void updateUserDto(UserUpdateRequestDTO dto, @MappingTarget User user);
+    public abstract void updateUserDto(UserUpdateRequestDTO dto, @MappingTarget User user);
 
 }

@@ -10,15 +10,15 @@ import org.mapstruct.MappingTarget;
 
 
 @Mapper(componentModel = "spring")
-public interface ArtisanMapper {
+public abstract class ArtisanMapper extends ReferenceMapper {
 
      @Mapping(target = "id",ignore = true)
-     Artisan toEntity(ArtisanRequestDTO dto);
+     public abstract Artisan toEntity(ArtisanRequestDTO dto);
 
      @Mapping(target = "moyenneAvis", ignore = true)
      @Mapping(target = "nombreAvis", ignore = true)
-     ArtisanResponseDTO toDto(Artisan artisan);
+     public abstract ArtisanResponseDTO toDto(Artisan artisan);
 
      @Mapping(target = "id",ignore = true)
-     void updateArtisanDto(ArtisanUpdateRequestDTO dto, @MappingTarget Artisan artisan);
+     public abstract void updateArtisanDto(ArtisanUpdateRequestDTO dto, @MappingTarget Artisan artisan);
 }

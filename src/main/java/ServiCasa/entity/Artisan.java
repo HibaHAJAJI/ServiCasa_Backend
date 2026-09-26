@@ -18,8 +18,6 @@ import java.util.List;
 @PrimaryKeyJoinColumn(name = "id")
 public class Artisan extends User {
 
-    private String specialite;
-
     private Integer anneesExperience;
 
     private BigDecimal tarifHoraire;
@@ -46,5 +44,9 @@ public class Artisan extends User {
     @OneToMany(mappedBy = "artisan", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ServiceArtisan> services;
+
+    @ManyToOne
+    @JoinColumn(name = "specialite_id")
+    private Specialite specialite;
 
 }

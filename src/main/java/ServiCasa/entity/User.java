@@ -29,8 +29,6 @@ public class User implements UserDetails {
 
     private String telephone;
 
-    private String ville;
-
     @Column(unique = true)
     private String email;
 
@@ -39,6 +37,10 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @ManyToOne
+    @JoinColumn(name = "ville_id")
+    private Ville ville;
 
 
     @Override
