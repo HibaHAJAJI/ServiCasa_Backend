@@ -9,6 +9,7 @@ import ServiCasa.dto.request.ClientRequestDTO;
 import ServiCasa.dto.request.UserRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
     public AuthResponseDTO registerAdmin(@RequestBody UserRegisterRequest request){
         return authService.registerAdmin(request);
     }

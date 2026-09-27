@@ -1,6 +1,7 @@
 package ServiCasa.dashboard.artisan;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ public class DashboardArtisanController {
     private final DashboardArtisan dashboardArtisan;
 
     @GetMapping
+    @PreAuthorize("hasRole('ARTISAN')")
     public DashboardArtisanResponseDTO getDashboard(Authentication authentication) {
         String email = authentication.getName();
         return dashboardArtisan.getDashboard(email);

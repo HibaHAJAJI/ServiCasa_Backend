@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,7 @@ public class AvisController {
     private final AvisService avisService;
 
     @PostMapping
+    @PreAuthorize("hasRole('CLIENT')")
     public AvisResponseDTO createAvis(@Valid @RequestBody AvisRequestDTO dto, Authentication authentication) {
         String email = authentication != null ? authentication.getName() : null;
         return avisService.addAvis(dto, email);

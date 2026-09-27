@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,11 +24,13 @@ public class ArtisanController {
     private final ArtisanService artisanService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','ARTISAN')")
     public  ArtisanResponseDTO createArtisan(@Valid@RequestBody ArtisanRequestDTO dto){
         return artisanService.addArtisan(dto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','ARTISAN')")
     public ArtisanResponseDTO updateArtisan(@Valid @RequestBody ArtisanUpdateRequestDTO dto, @PathVariable Long id){
         return artisanService.updateArtisan(id,dto);
     }
@@ -43,6 +46,7 @@ public class ArtisanController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteArtisanById(@PathVariable Long id){
         artisanService.deleteArtisan(id);
     }
@@ -59,9 +63,5 @@ public class ArtisanController {
         return artisanService.findByVilleArtisan(ville, pageable);
     }
 
-    @GetMapping("/villes")
-    public List<String> getVilles() {
-        return artisanService.findAllVilles();
-    }
 
 }

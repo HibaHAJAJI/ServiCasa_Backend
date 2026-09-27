@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -20,11 +21,13 @@ public class DisponibiliteController {
     private final DisponibiliteService disponibiliteService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ARTISAN')")
     public DisponibiliteResponseDTO createDisponibilite(@Valid @RequestBody DisponibiliteRequestDTO dto){
         return disponibiliteService.addDisponibilite(dto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ARTISAN')")
     public DisponibiliteResponseDTO updateDisponibilite(@Valid @RequestBody DisponibiliteRequestDTO dto, @PathVariable Long id){
         return disponibiliteService.updateDisponibilite(dto,id);
     }
@@ -50,6 +53,7 @@ public class DisponibiliteController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ARTISAN')")
     public void deleteDisponibiliteById(@PathVariable Long id){
         disponibiliteService.deleteDisponibilite(id);
     }
