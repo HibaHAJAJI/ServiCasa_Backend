@@ -4,7 +4,12 @@ import ServiCasa.dto.response.UserResponse;
 import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
 import ServiCasa.dto.updateDto.ClientUpdateRequestDTO;
 import ServiCasa.dto.updateDto.UserUpdateRequestDTO;
+import ServiCasa.entity.Artisan;
+import ServiCasa.entity.Client;
 import ServiCasa.entity.User;
+import ServiCasa.mapper.ArtisanMapper;
+import ServiCasa.mapper.ClientMapper;
+import ServiCasa.mapper.UserMapper;
 import ServiCasa.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -19,12 +24,26 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
+    private final ArtisanMapper artisanMapper;
+    private final ClientMapper clientMapper;
 
 
     @GetMapping("/profile")
-    public ResponseEntity<User>  getProfile(Authentication authentication) {
+    public ResponseEntity<UserResponse> getProfile(Authentication authentication) {
         String email = authentication.getName();
-        return ResponseEntity.ok(userService.getProfile(email)) ;
+        User user = userService.getProfile(email);
+        return ResponseEntity.ok(toResponse(user));
+    }
+
+    private UserResponse toResponse(User user) {
+        if (user instanceof Artisan artisan) {
+            return artisanMapper.toDto(artisan);
+        }
+        if (user instanceof Client client) {
+            return clientMapper.toDto(client);
+        }
+        return userMapper.toDto(user);
     }
 
     @PutMapping("/client/profile")

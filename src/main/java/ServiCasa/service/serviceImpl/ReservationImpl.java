@@ -375,6 +375,7 @@ public class ReservationImpl implements ReservationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ReservationResponseDTO> findAllReservations(Pageable pageable) {
         return repository.findAll(pageable).map(mapper::toDto);
     }
@@ -407,12 +408,14 @@ public class ReservationImpl implements ReservationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ReservationResponseDTO> findReservationsByClient(Long clientId, Pageable pageable) {
         Page<Reservation> reservations = repository.findByClientId(clientId, pageable);
         return reservations.map(mapper::toDto);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ReservationResponseDTO> getPendingReservationsByArtisan(String email,  Pageable pageable) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
@@ -426,6 +429,7 @@ public class ReservationImpl implements ReservationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ReservationResponseDTO> getInterventionsByArtisan(String email, Pageable pageable) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable"));
@@ -437,11 +441,13 @@ public class ReservationImpl implements ReservationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ReservationResponseDTO> getLatestReservations(Pageable pageable) {
         return repository.findAllByOrderByDateReservationDesc(pageable).map(mapper::toDto);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ReservationResponseDTO> getMyReservations(String email, Pageable pageable) {
 
         User user = userRepository.findByEmail(email)

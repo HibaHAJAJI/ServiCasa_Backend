@@ -40,7 +40,6 @@ public class AuthController {
     }
 
     @PostMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
     public AuthResponseDTO registerAdmin(@RequestBody UserRegisterRequest request){
         return authService.registerAdmin(request);
     }
