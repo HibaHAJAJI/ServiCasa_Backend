@@ -1,0 +1,27 @@
+# Artefacts de build (regenere par le stage Maven de l'image)
+target/
+
+# Depot Git & metadonnees
+.git/
+.gitattributes
+.github/
+.gitignore
+
+# IDE
+.idea/
+*.iml
+*.iws
+.vscode/
+
+# Wrapper Maven inutile (l'image utilise maven:3.9.9)
+mvnw
+mvnw.cmd
+.mvn/
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Divers
+*.log

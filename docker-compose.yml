@@ -16,12 +16,15 @@ services:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot1234"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 40s
+
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    image: servicasa-backend:latest
     container_name: servicasa_app
     restart: always
     depends_on:
@@ -30,22 +33,41 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/servicasa_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: "jdbc:mysql://db:3306/servicasa_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root1234
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_SHOW_SQL: "false"
+
+      SPRING_FLYWAY_ENABLED: "true"
+      SPRING_FLYWAY_LOCATIONS: classpath:db/migration
+      SPRING_FLYWAY_ENCODING: UTF-8
+
+      JWT_SECRET: "NDBiRDI1NDY4MjU0Njg2NTY4NjU2ODY1Njg2NTY4NjU2ODY1Njg2NQ=="
+      JWT_EXPIRATION: "8640000"
+
+      CORS_ALLOWED_ORIGINS: "http://localhost,http://localhost:5173,http://localhost:5174,http://localhost:5175"
+
+      SERVER_PORT: "8080"
+      TZ: Europe/Paris
     networks:
       - servicasa-net
+
 
   frontend:
     build:
       context: ../ServiCasa_Frontend
       dockerfile: Dockerfile
+    image: servicasa-frontend:latest
     container_name: servicasa_frontend
     restart: always
+    depends_on:
+      app:
+        condition: service_healthy
     ports:
       - "80:80"
-    depends_on:
-      - app
     networks:
       - servicasa-net
 
