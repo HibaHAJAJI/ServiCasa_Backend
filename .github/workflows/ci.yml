@@ -53,8 +53,3 @@ jobs:
         with:
           name: ServiCasa-API
           path: target/*.jar
-
-      - name: SonarCloud Analysis
-        run: ./mvnw sonar:sonar
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
