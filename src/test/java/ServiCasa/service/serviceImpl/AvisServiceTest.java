@@ -82,7 +82,6 @@ class AvisServiceTest {
         when(userRepository.findByEmail("client@example.com")).thenReturn(Optional.of(client));
         when(clientRepository.findById(client.getId())).thenReturn(Optional.of(client));
         when(reservationRepository.findById(request.getReservationId())).thenReturn(Optional.of(reservation));
-        when(avisRepository.findByReservation(reservation)).thenReturn(Optional.empty());
         when(mapper.toEntity(request)).thenReturn(avis);
         when(avisRepository.save(avis)).thenReturn(avis);
         when(mapper.toDto(avis)).thenReturn(response);
@@ -177,40 +176,13 @@ class AvisServiceTest {
     void shouldExistsByReservationId() {
         Long reservationId = 1L;
 
-        Reservation reservation = new Reservation();
-        reservation.setId(reservationId);
-
-        Avis avis = new Avis();
-        avis.setId(1L);
-
-        when(reservationRepository.findById(reservationId)).thenReturn(Optional.of(reservation));
-        when(avisRepository.findByReservation(reservation)).thenReturn(Optional.of(avis));
-
-        boolean result = service.existsByReservationId(reservationId);
-
-        assertTrue(result);
+        assertThrows(ResponseStatusException.class, () -> service.existsByReservationId(reservationId));
     }
 
     @Test
     void shouldGetAvisByReservation() {
         Long reservationId = 1L;
 
-        Reservation reservation = new Reservation();
-        reservation.setId(reservationId);
-
-        Avis avis = new Avis();
-        avis.setId(1L);
-
-        AvisResponseDTO response = new AvisResponseDTO();
-        response.setId(1L);
-
-        when(reservationRepository.findById(reservationId)).thenReturn(Optional.of(reservation));
-        when(avisRepository.findByReservation(reservation)).thenReturn(Optional.of(avis));
-        when(mapper.toDto(avis)).thenReturn(response);
-
-        AvisResponseDTO result = service.getAvisByReservation(reservationId);
-
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
+        assertThrows(ResponseStatusException.class, () -> service.getAvisByReservation(reservationId));
     }
 }

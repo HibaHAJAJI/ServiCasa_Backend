@@ -55,16 +55,11 @@ public class AvisServiceImpl implements AvisService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Vous ne pouvez donner un avis que pour une réservation terminée");
         }
 
-        if (avisRepository.findByReservation(reservation).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Un avis existe déjà pour cette réservation");
-        }
-
         Artisan artisan = reservation.getArtisan();
 
         Avis avis = mapper.toEntity(dto);
         avis.setClient(client);
         avis.setArtisan(artisan);
-        avis.setReservation(reservation);
         avis.setDateCreation(LocalDateTime.now());
 
         Avis savedAvis = avisRepository.save(avis);
@@ -99,19 +94,13 @@ public class AvisServiceImpl implements AvisService {
 
     @Override
     public boolean existsByReservationId(Long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Réservation introuvable"));
-        return avisRepository.findByReservation(reservation).isPresent();
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED,
+                "La recherche d'un avis par réservation n'est plus disponible : un avis référence désormais un client et un artisan.");
     }
 
     @Override
     public AvisResponseDTO getAvisByReservation(Long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Réservation introuvable"));
-
-        Avis avis = avisRepository.findByReservation(reservation)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Avis introuvable"));
-
-        return mapper.toDto(avis);
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED,
+                "La recherche d'un avis par réservation n'est plus disponible : un avis référence désormais un client et un artisan.");
     }
 }

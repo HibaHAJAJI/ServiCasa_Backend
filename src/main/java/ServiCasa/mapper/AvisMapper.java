@@ -13,7 +13,6 @@ public interface AvisMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "client", ignore = true)
     @Mapping(target = "artisan", ignore = true)
-    @Mapping(target = "reservation", ignore = true)
     @Mapping(target = "dateCreation", ignore = true)
     Avis toEntity(AvisRequestDTO dto);
 
@@ -21,6 +20,5 @@ public interface AvisMapper {
     @Mapping(target = "clientNom", source = "client.nom")
     @Mapping(target = "clientPrenom", source = "client.prenom")
     @Mapping(target = "artisanId", source = "artisan.id")
-    @Mapping(target = "reservationId", source = "reservation.id")
     AvisResponseDTO toDto(Avis avis);
 }

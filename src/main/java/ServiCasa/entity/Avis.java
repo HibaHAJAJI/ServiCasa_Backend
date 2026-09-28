@@ -34,10 +34,6 @@ public class Avis {
     @JoinColumn(name = "artisan_id")
     private Artisan artisan;
 
-    @OneToOne()
-    @JoinColumn(name = "reservation_id", unique = true)
-    private Reservation reservation;
-
     @PrePersist
     protected void onCreate() {
         dateCreation = LocalDateTime.now();
