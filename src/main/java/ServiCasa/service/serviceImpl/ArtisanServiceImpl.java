@@ -5,6 +5,8 @@ import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.response.ArtisanResponseDTO;
 import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
 import ServiCasa.entity.Artisan;
+import ServiCasa.entity.Specialite;
+import ServiCasa.entity.Ville;
 import ServiCasa.mapper.ArtisanMapper;
 import ServiCasa.repository.ArtisanRepository;
 import ServiCasa.repository.AvisRepository;
@@ -108,6 +110,11 @@ public class ArtisanServiceImpl implements ArtisanService {
        dto.setMoyenneAvis(moyenne != null ? moyenne : 0.0);
        dto.setNombreAvis(nombre != null ? nombre : 0L);
        return dto;
+   }
+
+   @Override
+   public Page<ArtisanResponseDTO>  findBySpecialiteAndVille( Ville ville, Specialite specialite,Pageable pageable) {
+       return repository.findByVilleAndSpecialite(ville,specialite,  pageable).map(this::mapToDtoWithAvis);
    }
 
 }

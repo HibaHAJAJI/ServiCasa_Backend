@@ -3,6 +3,8 @@ package ServiCasa.controller;
 import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.response.ArtisanResponseDTO;
 import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
+import ServiCasa.entity.Specialite;
+import ServiCasa.entity.Ville;
 import ServiCasa.service.ArtisanService;
 
 import jakarta.validation.Valid;
@@ -63,5 +65,8 @@ public class ArtisanController {
         return artisanService.findByVilleArtisan(ville, pageable);
     }
 
-
+    @GetMapping("/search")
+    public Page<ArtisanResponseDTO> findBySpecialiteAndVille(@RequestParam Ville ville, @RequestParam Specialite specialite, Pageable pageable) {
+        return artisanService.findBySpecialiteAndVille(ville, specialite, pageable);
+    }
 }

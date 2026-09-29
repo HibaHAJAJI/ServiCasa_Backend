@@ -10,15 +10,15 @@ import org.mapstruct.MappingTarget;
 
 
 @Mapper(componentModel = "spring")
-public abstract class ClientMapper extends ReferenceMapper {
+public interface  ClientMapper  {
 
 
      @Mapping(target = "id",ignore = true)
-     public abstract Client toEntity(ClientRequestDTO dto);
+      Client toEntity(ClientRequestDTO dto);
 
-     public abstract ClientResponseDTO toDto(Client client);
+    ClientResponseDTO toDto(Client client);
 
 
      @Mapping(target = "id",ignore = true)
-     public abstract void updateClientDto(ClientUpdateRequestDTO dto, @MappingTarget Client client);
+     void updateClientDto(ClientUpdateRequestDTO dto, @MappingTarget Client client);
 }

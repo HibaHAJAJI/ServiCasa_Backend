@@ -4,6 +4,7 @@ import ServiCasa.dto.request.ClientRequestDTO;
 import ServiCasa.dto.updateDto.ClientUpdateRequestDTO;
 import ServiCasa.dto.response.ClientResponseDTO;
 import ServiCasa.entity.Client;
+import ServiCasa.entity.Ville;
 import ServiCasa.mapper.ClientMapper;
 import ServiCasa.repository.ClientRepository;
 import ServiCasa.repository.UserRepository;
@@ -50,7 +51,11 @@ class ClientServiceTest {
         request.setNom("Hiba");
         request.setEmail("hiba@gmail.com");
         request.setTelephone("0600000000");
-        request.setVille("Beni Mellal");
+
+        Ville ville = new Ville();
+        ville.setNom("Beni Mellal");
+        request.setVille(ville);
+
         request.setPassword("password123");
         request.setAdresse("123 rue");
 

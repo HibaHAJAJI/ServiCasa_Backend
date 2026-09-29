@@ -4,6 +4,8 @@ package ServiCasa.service;
 import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.response.ArtisanResponseDTO;
 import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
+import ServiCasa.entity.Specialite;
+import ServiCasa.entity.Ville;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,5 +30,7 @@ public interface ArtisanService {
     Page<ArtisanResponseDTO> findByVilleArtisan(String ville, Pageable pageable);
 
     List<String> findAllVilles();
+
+    Page<ArtisanResponseDTO> findBySpecialiteAndVille( Ville ville,Specialite specialite, Pageable pageable);
 
 }

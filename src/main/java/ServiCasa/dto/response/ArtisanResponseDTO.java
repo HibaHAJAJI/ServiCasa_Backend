@@ -1,6 +1,7 @@
 package ServiCasa.dto.response;
 
 
+import ServiCasa.entity.Specialite;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ArtisanResponseDTO extends UserResponse {
 
-    private String specialite;
+    private Specialite specialite;
 
     private Integer anneesExperience;
 

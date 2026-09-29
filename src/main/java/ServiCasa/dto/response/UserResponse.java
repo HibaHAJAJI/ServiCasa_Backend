@@ -1,6 +1,7 @@
 package ServiCasa.dto.response;
 
 
+import ServiCasa.entity.Ville;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class UserResponse {
 
     private String telephone;
 
-    private String ville;
+    private Ville ville;
 
     private String email;
 

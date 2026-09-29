@@ -249,6 +249,8 @@ Le diagramme suivant représente le scénario de refus d'une réservation
 par un artisan.
 
 ![img_4.png](img_4.png)
+
+
 ### Déroulement
 
 ``` text

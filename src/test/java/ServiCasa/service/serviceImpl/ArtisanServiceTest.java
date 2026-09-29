@@ -4,6 +4,8 @@ import ServiCasa.dto.request.ArtisanRequestDTO;
 import ServiCasa.dto.response.ArtisanResponseDTO;
 import ServiCasa.dto.updateDto.ArtisanUpdateRequestDTO;
 import ServiCasa.entity.Artisan;
+import ServiCasa.entity.Ville;
+import ServiCasa.entity.Specialite;
 import ServiCasa.mapper.ArtisanMapper;
 import ServiCasa.repository.ArtisanRepository;
 import ServiCasa.repository.AvisRepository;
@@ -55,9 +57,17 @@ class ArtisanServiceTest {
         request.setNom("Hiba");
         request.setEmail("hiba@gmail.com");
         request.setTelephone("0600000000");
-        request.setVille("Beni Mellal");
+
+        Ville ville = new Ville();
+        ville.setNom("Beni Mellal");
+        request.setVille(ville);
+
         request.setPassword("password123");
-        request.setSpecialite("Plomberie");
+
+        Specialite specialite = new Specialite();
+        specialite.setNom("Plomberie");
+        request.setSpecialite(specialite);
+
         request.setAnneesExperience(5);
         request.setTarifHoraire(java.math.BigDecimal.valueOf(50));
         request.setDescription("Artisan plombier");

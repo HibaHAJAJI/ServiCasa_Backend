@@ -1,6 +1,7 @@
 package ServiCasa.dto.updateDto;
 
 
+import ServiCasa.entity.Ville;
 import lombok.Data;
 
 @Data
@@ -12,7 +13,7 @@ public class ClientUpdateRequestDTO {
 
     private String telephone;
 
-    private String ville;
+    private Ville ville;
 
     private String adresse;
 }

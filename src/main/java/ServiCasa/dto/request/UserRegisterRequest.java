@@ -1,5 +1,6 @@
 package ServiCasa.dto.request;
 
+import ServiCasa.entity.Ville;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import ServiCasa.enums.Role;
@@ -18,8 +19,8 @@ public class UserRegisterRequest {
     @Pattern(regexp = "^[0-9]+$" ,message = "Le champs entrer uniquement les chiffres")
     private String telephone;
 
-    @NotBlank(message = "La ville est obligatoire")
-    private String ville;
+    @NotNull(message = "La ville est obligatoire")
+    private Ville ville;
 
     @NotBlank(message = "L'email est obligatoire")
     @Email(message = "L'email doit être valide")

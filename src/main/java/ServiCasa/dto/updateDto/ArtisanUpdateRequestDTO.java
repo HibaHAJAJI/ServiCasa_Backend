@@ -1,6 +1,8 @@
 package ServiCasa.dto.updateDto;
 
 
+import ServiCasa.entity.Specialite;
+import ServiCasa.entity.Ville;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -14,9 +16,9 @@ public class ArtisanUpdateRequestDTO {
 
     private String telephone;
 
-    private String ville;
+    private Ville ville;
 
-    private String specialite;
+    private Specialite specialite;
 
     private Integer anneesExperience;
 

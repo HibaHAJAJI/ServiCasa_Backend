@@ -10,6 +10,8 @@ import ServiCasa.dto.updateDto.UserUpdateRequestDTO;
 import ServiCasa.entity.Artisan;
 import ServiCasa.entity.Client;
 import ServiCasa.entity.User;
+import ServiCasa.entity.Ville;
+import ServiCasa.entity.Specialite;
 import ServiCasa.enums.Role;
 import ServiCasa.enums.StatutCompte;
 import ServiCasa.mapper.ArtisanMapper;
@@ -134,9 +136,17 @@ class AuthServiceTest {
         request.setNom("Hiba");
         request.setEmail("artisan@example.com");
         request.setTelephone("0600000000");
-        request.setVille("Casablanca");
+
+        Ville ville = new Ville();
+        ville.setNom("Casablanca");
+        request.setVille(ville);
+
         request.setPassword("password123");
-        request.setSpecialite("Plomberie");
+
+        Specialite specialite = new Specialite();
+        specialite.setNom("Plomberie");
+        request.setSpecialite(specialite);
+
         request.setAnneesExperience(5);
         request.setTarifHoraire(java.math.BigDecimal.valueOf(50));
         request.setDescription("Artisan");
@@ -178,7 +188,11 @@ class AuthServiceTest {
         request.setNom("Hiba");
         request.setEmail("client@example.com");
         request.setTelephone("0600000000");
-        request.setVille("Casablanca");
+
+        Ville ville = new Ville();
+        ville.setNom("Casablanca");
+        request.setVille(ville);
+
         request.setPassword("password123");
         request.setAdresse("123 rue");
 
@@ -217,7 +231,11 @@ class AuthServiceTest {
         request.setNom("Admin");
         request.setEmail("admin@example.com");
         request.setTelephone("0600000000");
-        request.setVille("Casablanca");
+
+        Ville ville = new Ville();
+        ville.setNom("Casablanca");
+        request.setVille(ville);
+
         request.setPassword("password123");
         request.setRole(Role.ADMIN);
 

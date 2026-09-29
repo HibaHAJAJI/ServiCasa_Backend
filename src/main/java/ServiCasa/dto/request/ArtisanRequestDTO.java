@@ -1,5 +1,6 @@
 package ServiCasa.dto.request;
 
+import ServiCasa.entity.Specialite;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 public class ArtisanRequestDTO extends UserRegisterRequest {
 
     @NotNull(message = "La spécialité est obligatoire")
-    private String specialite;
+    private Specialite specialite;
 
     @Positive(message = "Les années d'expérience doivent être positives")
     private Integer anneesExperience;
